@@ -26,7 +26,7 @@ enum LOG_LEVELS
  * @return 0 on success, 1 on file failure
  */
 int loggerInit(
-	int log_level = LOG_ERRORS,
+	LOG_LEVELS log_level = LOG_ERRORS,
 	bool log_to_file = true,
 	bool log_to_cout = true
 );
