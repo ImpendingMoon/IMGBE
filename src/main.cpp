@@ -8,6 +8,9 @@
 #include "main.hpp"
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
+#include "logger.hpp"
+
+
 
 int main(int argc, char** argv)
 {
@@ -20,9 +23,8 @@ int main(int argc, char** argv)
 
 /**
  * @brief Initializes SDL, Logger, and the Window.
- * @return 0 on success, 1 on SDL error
  */
-int mainInit(void)
+void mainInit(void)
 {
 	int err;
 	err = SDL_Init(
@@ -31,8 +33,13 @@ int mainInit(void)
 		| SDL_INIT_EVENTS
 	);
 
-	if(err != 0) { return 1; }
-	return 0;
+	if(err != 0)
+	{
+		std::string error_message = SDL_GetError();
+		throw new std::runtime_error("Couldn't initialize SDL2! " + error_message);
+	}
+
+	loggerInit(LOG_DEBUG, true, true);
 }
 
 
@@ -42,5 +49,6 @@ int mainInit(void)
  */
 void mainExit(void)
 {
+	loggerExit();
 	SDL_Quit();
 }

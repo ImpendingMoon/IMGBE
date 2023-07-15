@@ -9,9 +9,8 @@
 
 /**
  * @brief Initializes SDL, Logger, and the Window.
- * @return 0 on success, 1 on SDL error
  */
-int mainInit(void);
+void mainInit(void);
 
 /**
  * @brief Properly quits SDL and Logger.

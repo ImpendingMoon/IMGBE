@@ -23,9 +23,8 @@ enum LOG_LEVELS
  * @param log_level default=LOG_ERRORS
  * @param log_to_file Attempt to open a logfile and print logs, default=true
  * @param log_to_cout Print logs to cout/cerr, default=true
- * @return 0 on success, 1 on file failure
  */
-int loggerInit(
+void loggerInit(
 	LOG_LEVELS log_level = LOG_ERRORS,
 	bool log_to_file = true,
 	bool log_to_cout = true
