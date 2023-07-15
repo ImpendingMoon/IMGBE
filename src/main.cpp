@@ -1,8 +1,8 @@
 /**
- @file main.cpp
- @brief Handles program initialization
- @author ImpendingMoon
- @date 2023-07-15
+ * @file main.cpp
+ * @brief Handles program initialization
+ * @author ImpendingMoon
+ * @date 2023-07-15
  */
 
 #include "main.hpp"
