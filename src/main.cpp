@@ -9,12 +9,14 @@
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include "logger.hpp"
+#include "program.hpp"
 
 
 
 int main(int argc, char** argv)
 {
 	mainInit();
+	runMainLoop(argc, argv);
 	mainExit();
 	return 0;
 }
@@ -42,8 +44,6 @@ void mainInit(void)
 	}
 
 	loggerInit(LOG_DEBUG, true, true);
-
-	logMessage("Successfully started IMGBE.", LOG_INFO);
 }
 
 
