@@ -36,10 +36,14 @@ void mainInit(void)
 	if(err != 0)
 	{
 		std::string error_message = SDL_GetError();
-		throw new std::runtime_error("Couldn't initialize SDL2! " + error_message);
+		throw std::runtime_error("Couldn't initialize SDL2! "
+								 + error_message
+		);
 	}
 
 	loggerInit(LOG_DEBUG, true, true);
+
+	logMessage("Successfully started IMGBE.", LOG_INFO);
 }
 
 
@@ -49,6 +53,7 @@ void mainInit(void)
  */
 void mainExit(void)
 {
+	logMessage("Exiting IMGBE...", LOG_INFO);
 	loggerExit();
 	SDL_Quit();
 }

@@ -41,3 +41,14 @@ void loggerExit(void);
  * @param level default=LOG_INFO
  */
 void logMessage(const std::string& msg, LOG_LEVELS level = LOG_INFO);
+
+void setLogLevel(LOG_LEVELS level);
+
+void setLogToCout(bool value);
+
+void setLogToFile(bool value);
+
+/**
+ * @brief Returns a timestamp formatted at HH:MM:SS
+ */
+std::string getTimestamp(void);

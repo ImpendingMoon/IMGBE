@@ -10,6 +10,8 @@
 #include <exception>
 #include <SDL2/SDL.h>
 #include <filesystem>
+#include <ctime>
+#include <fmt/core.h>
 
 
 
@@ -36,6 +38,7 @@ void loggerInit(
 {
 	logLevel = log_level;
 	logToCout = log_to_cout;
+	logToFile = log_to_file;
 
 	if(log_to_file)
 	{
@@ -53,13 +56,11 @@ void loggerInit(
 
 		if(!logFile.is_open())
 		{
-			throw new std::runtime_error("Cannot open file " + logFilePath.string());
+			throw std::runtime_error("Cannot open file " + logFilePath.string());
 		}
 	}
 
 	isInitialized = true;
-
-	logMessage("Logger successfully initialized.", LOG_INFO);
 }
 
 
@@ -84,7 +85,7 @@ void logMessage(const std::string& msg, LOG_LEVELS level)
 {
 	if(!isInitialized)
 	{
-		throw new std::runtime_error("Logger must be initialized!");
+		throw std::runtime_error("Logger must be initialized!");
 	}
 
 	if(logLevel == LOG_NOTHING || level == LOG_NOTHING)
@@ -92,19 +93,65 @@ void logMessage(const std::string& msg, LOG_LEVELS level)
 		return;
 	}
 
+	std::string fmt_message = fmt::format(
+		"[{}] {}\n",
+		getTimestamp(),
+		msg
+		);
+
 	if(logToCout)
 	{
 		if(level == LOG_ERRORS)
 		{
-			std::cerr << msg << std::endl;
+			std::cerr << fmt_message;
 		} else
 		{
-			std::cout << msg << std::endl;
+			std::cout << fmt_message;
 		}
 	}
 
 	if(logToFile && logFile.is_open())
 	{
-		logFile << msg << std::endl;
+		logFile << fmt_message;
 	}
+}
+
+
+
+void setLogLevel(LOG_LEVELS level)
+{
+	logLevel = level;
+}
+
+
+
+void setLogToCout(bool value)
+{
+	logToCout = value;
+}
+
+
+
+void setLogToFile(bool value)
+{
+	logToCout = value;
+}
+
+
+
+/**
+ * @brief Returns a timestamp formatted at HH:MM:SS
+ */
+std::string getTimestamp(void)
+{
+	std::time_t current_time = time(nullptr);
+	std::tm local_time;
+	localtime_s(&local_time, &current_time);
+
+	return fmt::format(
+		"{:02d}:{:02d}:{:02d}",
+		local_time.tm_hour,
+		local_time.tm_min,
+		local_time.tm_sec
+	);
 }
