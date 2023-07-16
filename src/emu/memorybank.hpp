@@ -32,11 +32,12 @@ public:
 	~MemoryBank();
 
 	/**
-	 * @brief Reads a byte from memory. Returns 0x00 when read locked.
+	 * @brief Reads a byte from memory.
 	 * @param address Address must be within bank's range.
 	 * @return Byte at address.
 	 * @throws std::out_of_range if address is out of range.
 	 * @throws std::runtime_error if internal error occurred.
+	 * @returns Byte at address, 0x00 if locked.
 	 */
 	uint8_t readByte(size_t address) const;
 
