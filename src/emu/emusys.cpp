@@ -6,16 +6,21 @@
  */
 
 #include "emusys.hpp"
+#include "../logger.hpp"
 
 
 
 EmuSys::EmuSys()
-{}
+{
+	logMessage("Emulated system created.", LOG_INFO);
+}
 
 
 
 EmuSys::~EmuSys()
-{}
+{
+	logMessage("Emulated system destroyed.", LOG_INFO);
+}
 
 
 /**
@@ -112,4 +117,7 @@ bool EmuSys::isPaused(void) const noexcept
  */
 void EmuSys::dumpSystem(void) const
 {
+	logMessage("---BEGIN SYSTEM DUMP---", LOG_DEBUG);
+	mem.dumpMemory();
+	logMessage("---END SYSTEM DUMP---", LOG_DEBUG);
 }

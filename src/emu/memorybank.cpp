@@ -21,25 +21,25 @@
  * @throws std::invalid_argument if startAddress is greater than endAddress.
  */
 MemoryBank::MemoryBank(
-		size_t startAddress,
-		size_t endAddress,
+		size_t start_address,
+		size_t end_address,
 		bool read_locked,
 		bool write_locked
 )
 {
-	if(startAddress > endAddress)
+	if(start_address > end_address)
 	{
 		throw std::invalid_argument(
 			"Start address cannot be greater than end address!"
 		);
 	}
 
-	data.reserve(endAddress - startAddress + 1);
-	data.resize(endAddress - startAddress + 1);
+	data.reserve(end_address - start_address + 1);
+	data.resize(end_address - start_address + 1);
 	std::fill(data.begin(), data.end(), 0);
 
-	startAddress = startAddress;
-	endAddress = endAddress;
+	startAddress = start_address;
+	endAddress = end_address;
 
 	readLocked = read_locked;
 	writeLocked = write_locked;
@@ -68,7 +68,7 @@ uint8_t MemoryBank::readByte(size_t address) const
 		);
 	}
 
-	assert(data.size() > (endAddress - startAddress + 1));
+	assert(data.size() == (endAddress - startAddress + 1));
 
 	return data.at(address - startAddress);
 }
@@ -91,7 +91,7 @@ void MemoryBank::writeByte(size_t address, uint8_t value)
 		);
 	}
 
-	assert(data.size() > (endAddress - startAddress + 1));
+	assert(data.size() == (endAddress - startAddress + 1));
 
 	data.at(address - startAddress) = value;
 }

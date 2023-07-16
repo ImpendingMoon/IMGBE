@@ -23,8 +23,8 @@ public:
 	 * @throws std::invalid_argument if startAddress is greater than endAddress.
 	 */
 	MemoryBank(
-		size_t startAddress,
-		size_t endAddress,
+		size_t start_address,
+		size_t end_address,
 		bool read_locked = false,
 		bool write_locked = false
 	);

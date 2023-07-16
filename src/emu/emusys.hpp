@@ -8,6 +8,7 @@
 #pragma once
 
 #include <filesystem>
+#include "emumemory.hpp"
 
 class EmuSys
 {
@@ -70,4 +71,6 @@ private:
 	bool paused = false;
 	std::filesystem::path romFilePath = "";
 	int cpu_speed = 4194304;
+
+	EmuMemory mem;
 };

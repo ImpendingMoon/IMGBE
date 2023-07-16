@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <fmt/core.h>
 #include "logger.hpp"
+#include "emu/emusys.hpp"
 
 bool exitRequested = false;
 
@@ -18,7 +19,7 @@ void throwInvalidArgument(const std::string& argument);
 std::string getKey(const std::string& pair, char delimiter);
 std::string getValue(const std::string& pair, char delimiter);
 
-
+EmuSys* emuSystem;
 
 /**
  * @brief Runs the main program loop until an exit is requested
@@ -36,6 +37,8 @@ void runMainLoop(int argc, char** argv) noexcept
 		exit(1);
 	}
 
+	emuSystem = new EmuSys();
+
 	logMessage("Starting main loop...", LOG_INFO);
 
 
@@ -44,6 +47,9 @@ void runMainLoop(int argc, char** argv) noexcept
 		// do stuff :D
 		requestExit();
 	}
+
+	emuSystem->dumpSystem();
+	delete emuSystem;
 
 	logMessage("Exited main loop.", LOG_INFO);
 }
