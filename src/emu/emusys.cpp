@@ -2,15 +2,18 @@
  * @file emu/emusys.cpp
  * @brief Implements the main emulated system
  * @author ImpendingMoon
- * @date 2023-07-15
+ * @date 2023-07-16
  */
 
 #include "emusys.hpp"
+#include <fmt/core.h>
 #include "../logger.hpp"
 
 
 
-EmuSys::EmuSys()
+EmuSys::EmuSys() :
+	mem(),
+	cart(&mem)
 {
 	logMessage("Emulated system created.", LOG_INFO);
 }
@@ -26,10 +29,12 @@ EmuSys::~EmuSys()
 /**
  * @brief Attempts to load a ROM file into the emulator
  * @param file_path Path to ROM file
- * @throws std::invalid_argument on non-existant file or bad ROM.
+ * @throws std::ios_base::failure on file error.
+ * @throws std::runtime_error on invalid ROM.
  */
 void EmuSys::loadROM(std::filesystem::path file_path)
 {
+	cart.loadROM(file_path);
 }
 
 

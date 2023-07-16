@@ -2,13 +2,14 @@
  * @file emu/emusys.hpp
  * @brief Implements the main emulated system
  * @author ImpendingMoon
- * @date 2023-07-15
+ * @date 2023-07-16
  */
 
 #pragma once
 
 #include <filesystem>
 #include "emumemory.hpp"
+#include "emucartridge.hpp"
 
 class EmuSys
 {
@@ -19,7 +20,8 @@ public:
 	/**
 	 * @brief Attempts to load a ROM file into the emulator
 	 * @param file_path Path to ROM file
-	 * @throws std::invalid_argument on non-existant file or bad ROM.
+	 * @throws std::ios_base::failure on file error.
+	 * @throws std::runtime_error on invalid ROM.
 	 */
 	void loadROM(std::filesystem::path file_path);
 
@@ -70,7 +72,7 @@ private:
 	bool running = false;
 	bool paused = false;
 	std::filesystem::path romFilePath = "";
-	int cpu_speed = 4194304;
 
 	EmuMemory mem;
+	EmuCartridge cart;
 };

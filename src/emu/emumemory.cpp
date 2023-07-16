@@ -2,7 +2,7 @@
  * @file emu/emumemory.cpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-07-15
+ * @date 2023-07-16
  */
 
 #include "emumemory.hpp"
@@ -104,7 +104,7 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
 
 	else if(address >= ECHO_START && address <= ECHO_END)
 	{
-		return readByte(address - ECHO_START);
+		return readByte(address - 0x2000, ignore_illegal);
 	}
 
 	else if(address >= OAM_START && address <= OAM_END)
@@ -198,7 +198,7 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
 
 	else if(address >= ECHO_START && address <= ECHO_END)
 	{
-		writeByte(address - ECHO_START, value);
+		writeByte(address - 0x2000, value);
 	}
 
 	else if(address >= OAM_START && address <= OAM_END)
@@ -246,6 +246,8 @@ void EmuMemory::initROM0(MemoryBank& data)
 			data.getStartAddress(), data.getEndAddress()
 		));
 	}
+
+	ROM0 = std::move(data);
 }
 
 
@@ -417,9 +419,33 @@ void EmuMemory::writeERAM(void)
 
 
 /**
+ * @brief Returns a .sav file path from an existing file path
+ * @param rom_file_path
+ */
+std::filesystem::path EmuMemory::getSAVPath(
+	std::filesystem::path rom_file_path
+) noexcept
+{
+	std::string sav_file_path = rom_file_path.string();
+	size_t extension_pos = sav_file_path.find_last_of('.');
+
+	if(extension_pos == std::string::npos)
+	{
+		sav_file_path += ".sav";
+	} else
+	{
+		sav_file_path.replace(extension_pos, sav_file_path.length(), ".sav");
+	}
+
+	return std::filesystem::path(sav_file_path);
+}
+
+
+
+/**
  * @brief Dumps memory contents to the log as LOG_DEBUG.
  */
-void EmuMemory::dumpMemory(void) const
+void EmuMemory::dumpMemory(void) const noexcept
 {
 	using fmt::format;
 

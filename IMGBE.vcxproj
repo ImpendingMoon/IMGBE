@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\emu\emucartridge.cpp" />
     <ClCompile Include="src\emu\memorybank.cpp" />
     <ClCompile Include="src\emu\emumemory.cpp" />
     <ClCompile Include="src\emu\emusys.cpp" />
@@ -137,6 +138,7 @@
     <ClCompile Include="src\program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\emu\emucartridge.hpp" />
     <ClInclude Include="src\emu\memorybank.hpp" />
     <ClInclude Include="src\emu\emumemory.hpp" />
     <ClInclude Include="src\emu\emusys.hpp" />

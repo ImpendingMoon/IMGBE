@@ -2,7 +2,7 @@
  * @file emu/memorybank.hpp
  * @brief Implements a memory bank
  * @author ImpendingMoon
- * @date 2023-07-15
+ * @date 2023-07-16
  */
 
 #pragma once
@@ -58,6 +58,13 @@ public:
 
 	size_t getStartAddress(void) const noexcept;
 	size_t getEndAddress(void) const noexcept;
+
+	/**
+	 * @brief Copies an existing vector of data. Must be <= bank size.
+	 * @param data 
+	 * @throws std::invalid_argument if new_data is > bank size.
+	 */
+	void loadData(std::vector<uint8_t>& new_data);
 
 private:
 	std::vector<uint8_t> data;

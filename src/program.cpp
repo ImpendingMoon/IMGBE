@@ -2,7 +2,7 @@
  * @file program.cpp
  * @brief Handles the main loop
  * @author ImpendingMoon
- * @date 2023-07-15
+ * @date 2023-07-16
  */
 
 #include "program.hpp"
@@ -13,6 +13,7 @@
 #include "emu/emusys.hpp"
 
 bool exitRequested = false;
+double frameRate = 60;
 
 void handleArguments(int argc, char** argv);
 void throwInvalidArgument(const std::string& argument);
@@ -41,6 +42,17 @@ void runMainLoop(int argc, char** argv) noexcept
 
 	logMessage("Starting main loop...", LOG_INFO);
 
+	// TEMP: Load hardcoded file
+	try
+	{
+		emuSystem->loadROM("D:\\ROM.GB");
+	} catch(std::exception& ex)
+	{
+		logMessage(fmt::format(
+			"Cannot load ROM {}. Error: {}",
+			"D:\\ROM.GB", ex.what()
+		));
+	}
 
 	while(!exitRequested)
 	{
