@@ -1,0 +1,73 @@
+/**
+ * @file emu/emusys.hpp
+ * @brief Implements the main emulated system
+ * @author ImpendingMoon
+ * @date 2023-07-15
+ */
+
+#pragma once
+
+#include <filesystem>
+
+class EmuSys
+{
+public:
+	EmuSys();
+	~EmuSys();
+
+	/**
+	 * @brief Attempts to load a ROM file into the emulator
+	 * @param file_path Path to ROM file
+	 * @throws std::invalid_argument on non-existant file or bad ROM.
+	 */
+	void loadROM(std::filesystem::path file_path);
+
+	/**
+	 * @brief Steps the system by one CPU instruction
+	 * @throws std::runtime_error on system not running.
+	 */
+	void step(void);
+
+	/**
+	 * @brief Starts the system with an opened ROM.
+	 * @throws std::runtime_error on ROM not loaded.
+	 */
+	void start(void);
+
+	/**
+	 * @brief Pauses the system if it is running.
+	 */
+	void pause(void);
+
+	/**
+	 * @brief Resumes the system if it is paused. 
+	 */
+	void resume(void);
+
+	/**
+	 * @brief Stops the system if it is running.
+	 */
+	void stop(void);
+
+	/**
+	 * @brief Stops and re-starts the system.
+	 * @throws std::runtime_error on ROM not loaded.
+	 */
+	void reset(void);
+
+	bool isLoaded(void) const;
+	bool isRunning(void) const;
+	bool isPaused(void) const;
+
+	/**
+	 * @brief Dumps information of the current system state to LOG_DEBUG
+	 */
+	void dumpSystem(void) const;
+
+private:
+	bool loaded = false;
+	bool running = false;
+	bool paused = false;
+	std::filesystem::path romFilePath = "";
+	int cpu_speed = 4194304;
+};
