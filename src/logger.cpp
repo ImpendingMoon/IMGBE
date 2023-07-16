@@ -53,11 +53,14 @@ void loggerInit(
 
 		logFilePath += "imgbe.log";
 
-		logFile.open(logFilePath, std::istream::app);
+		logFile.open(logFilePath, std::istream::out);
 
 		if(!logFile.is_open())
 		{
-			throw std::runtime_error("Cannot open file " + logFilePath.string());
+			throw std::runtime_error(
+				"Cannot open file "
+				+ logFilePath.string()
+			);
 		}
 	}
 
