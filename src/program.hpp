@@ -12,9 +12,9 @@
  * @param argc
  * @param argv
  */
-void runMainLoop(int argc, char** argv);
+void runMainLoop(int argc, char** argv) noexcept;
 
 /**
  * @brief Requests to exit the program at the end of the current loop
  */
-void requestExit(void);
+void requestExit(void) noexcept;

@@ -21,8 +21,9 @@ enum LOG_LEVELS
 /**
  * @brief Initializes the logger with given settings, or defaults
  * @param log_level default=LOG_ERRORS
- * @param log_to_file Attempt to open a logfile and print logs, default=true
- * @param log_to_cout Print logs to cout/cerr, default=true
+ * @param log_to_file default=true, Does not attempt to open a file when false.
+ * @param log_to_cout default=true
+ * @throws std::runtime_error If log file cannot be opened.
  */
 void loggerInit(
 	LOG_LEVELS log_level = LOG_ERRORS,
@@ -33,22 +34,23 @@ void loggerInit(
 /**
  * @brief Closes the logfile.
  */
-void loggerExit(void);
+void loggerExit(void) noexcept;
 
 /**
  * @brief Logs a message
  * @param msg
  * @param level default=LOG_INFO
+ * @throws std::runtime_error if run before loggerInit.
  */
 void logMessage(const std::string& msg, LOG_LEVELS level = LOG_INFO);
 
-void setLogLevel(LOG_LEVELS level);
+void setLogLevel(LOG_LEVELS level) noexcept;
 
-void setLogToCout(bool value);
+void setLogToCout(bool value) noexcept;
 
-void setLogToFile(bool value);
+void setLogToFile(bool value) noexcept;
 
 /**
  * @brief Returns a timestamp formatted at HH:MM:SS
  */
-std::string getTimestamp(void);
+std::string getTimestamp(void) noexcept;

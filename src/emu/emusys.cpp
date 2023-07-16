@@ -52,7 +52,7 @@ void EmuSys::start(void)
 /**
  * @brief Pauses the system if it is running.
  */
-void EmuSys::pause(void)
+void EmuSys::pause(void) noexcept
 {
 }
 
@@ -61,7 +61,7 @@ void EmuSys::pause(void)
 /**
  * @brief Resumes the system if it is paused.
  */
-void EmuSys::resume(void)
+void EmuSys::resume(void) noexcept
 {
 }
 
@@ -70,7 +70,7 @@ void EmuSys::resume(void)
 /**
  * @brief Stops the system if it is running.
  */
-void EmuSys::stop(void)
+void EmuSys::stop(void) noexcept
 {
 }
 
@@ -86,21 +86,21 @@ void EmuSys::reset(void)
 
 
 
-bool EmuSys::isLoaded(void) const
+bool EmuSys::isLoaded(void) const noexcept
 {
 	return loaded;
 }
 
 
 
-bool EmuSys::isRunning(void) const
+bool EmuSys::isRunning(void) const noexcept
 {
 	return running;
 }
 
 
 
-bool EmuSys::isPaused(void) const
+bool EmuSys::isPaused(void) const noexcept
 {
 	return paused;
 }

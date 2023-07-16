@@ -37,17 +37,17 @@ public:
 	/**
 	 * @brief Pauses the system if it is running.
 	 */
-	void pause(void);
+	void pause(void) noexcept;
 
 	/**
 	 * @brief Resumes the system if it is paused. 
 	 */
-	void resume(void);
+	void resume(void) noexcept;
 
 	/**
 	 * @brief Stops the system if it is running.
 	 */
-	void stop(void);
+	void stop(void) noexcept;
 
 	/**
 	 * @brief Stops and re-starts the system.
@@ -55,9 +55,9 @@ public:
 	 */
 	void reset(void);
 
-	bool isLoaded(void) const;
-	bool isRunning(void) const;
-	bool isPaused(void) const;
+	bool isLoaded(void) const noexcept;
+	bool isRunning(void) const noexcept;
+	bool isPaused(void) const noexcept;
 
 	/**
 	 * @brief Dumps information of the current system state to LOG_DEBUG

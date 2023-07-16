@@ -25,7 +25,7 @@ std::string getValue(const std::string& pair, char delimiter);
  * @param argc
  * @param argv
  */
-void runMainLoop(int argc, char** argv)
+void runMainLoop(int argc, char** argv) noexcept
 {
 	try
 	{
@@ -53,7 +53,7 @@ void runMainLoop(int argc, char** argv)
 /**
  * @brief Requests to exit the program at the end of the current loop
  */
-void requestExit(void)
+void requestExit(void) noexcept
 {
 	logMessage("Main loop exit requested...", LOG_INFO);
 	exitRequested = true;
@@ -65,6 +65,7 @@ void requestExit(void)
  * @brief Handles provided arguments. Throws exceptions for invalid arguments.
  * @param argc
  * @param argv
+ * @throws std::invalid_argument if program argument is invalid.
  */
 void handleArguments(int argc, char** argv)
 {
@@ -82,7 +83,7 @@ void handleArguments(int argc, char** argv)
 
 		std::string key = getKey(argument.substr(1, argument.length()), '=');
 
-		switch(key[0])
+		switch(key[0]) // Originally supposed to be strings, didn't work.
 		{
 		case 'l': // Log level
 		{
@@ -120,7 +121,8 @@ void handleArguments(int argc, char** argv)
 
 /**
  * @brief Throws an invalid_argument exception with a formatted message
- * @param argument 
+ * @param argument Argument string.
+ * @throws std::invalid_argument always.
 */
 void throwInvalidArgument(const std::string& argument)
 {
@@ -137,7 +139,8 @@ void throwInvalidArgument(const std::string& argument)
  * @brief Gets the key in a key/value pair
  * @param pair Key/Value pair
  * @param delimiter Key/Value separator
-*/
+ * @throws std::invalid_argument if delimiter not found.
+ */
 std::string getKey(const std::string& pair, char delimiter)
 {
 	size_t delim_index = pair.find_first_of(delimiter);
@@ -162,8 +165,8 @@ std::string getKey(const std::string& pair, char delimiter)
  * @brief Gets the value in a key/value pair
  * @param pair Key/Value pair
  * @param delimiter Key/Value separator
- * @return 
-*/
+ * @throws std::invalid_argument if delimiter not found.
+ */
 std::string getValue(const std::string& pair, char delimiter)
 {
 	size_t delim_index = pair.find_first_of(delimiter);

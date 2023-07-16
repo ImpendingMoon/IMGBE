@@ -15,7 +15,18 @@
 
 int main(int argc, char** argv)
 {
-	mainInit();
+	try
+	{
+		mainInit();
+	} catch(std::runtime_error& ex)
+	{
+		std::cerr
+			<< "ERROR: Could not initialize program! "
+			<< ex.what()
+			<< std::endl;
+		exit(1);
+	}
+	
 	runMainLoop(argc, argv);
 	mainExit();
 	return 0;
@@ -25,6 +36,7 @@ int main(int argc, char** argv)
 
 /**
  * @brief Initializes SDL, Logger, and the Window.
+ * @throws std::runtime_error on SDL failure.
  */
 void mainInit(void)
 {
@@ -43,7 +55,15 @@ void mainInit(void)
 		);
 	}
 
-	loggerInit(LOG_DEBUG, true, true);
+	try
+	{
+		loggerInit(LOG_DEBUG, true, true);
+	} catch(std::invalid_argument& ex)
+	{
+		std::cerr << "Couldn't initialize logger! " << ex.what() << std::endl;
+		std::cerr << "Starting logger without logfile..." << std::endl;
+		loggerInit(LOG_DEBUG, false, true);
+	}
 }
 
 
@@ -51,7 +71,7 @@ void mainInit(void)
 /**
  * @brief Properly quits SDL and Logger.
  */
-void mainExit(void)
+void mainExit(void) noexcept
 {
 	logMessage("Exiting IMGBE...", LOG_INFO);
 	loggerExit();

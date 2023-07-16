@@ -7,12 +7,13 @@
 
 #pragma once
 
-/**
- * @brief Initializes SDL, Logger, and the Window.
- */
+ /**
+  * @brief Initializes SDL, Logger, and the Window.
+  * @throws std::runtime_error on SDL failure.
+  */
 void mainInit(void);
 
 /**
  * @brief Properly quits SDL and Logger.
  */
-void mainExit(void);
+void mainExit(void) noexcept;

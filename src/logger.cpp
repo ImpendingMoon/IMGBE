@@ -8,9 +8,9 @@
 #include "logger.hpp"
 #include <fstream>
 #include <exception>
-#include <SDL2/SDL.h>
 #include <filesystem>
 #include <ctime>
+#include <SDL2/SDL.h>
 #include <fmt/core.h>
 
 
@@ -29,6 +29,7 @@ std::ofstream logFile;
  * @param log_level default=LOG_ERRORS
  * @param log_to_file default=true, Does not attempt to open a file when false.
  * @param log_to_cout default=true
+ * @throws std::runtime_error If log file cannot be opened.
  */
 void loggerInit(
 	LOG_LEVELS log_level,
@@ -68,7 +69,7 @@ void loggerInit(
 /**
  * @brief Closes the logfile.
  */
-void loggerExit(void)
+void loggerExit(void) noexcept
 {
 	if(logFile.is_open()) { logFile.close(); }
 	isInitialized = false;
@@ -80,6 +81,7 @@ void loggerExit(void)
  * @brief Logs a message
  * @param msg
  * @param level default=LOG_INFO
+ * @throws std::runtime_error If run before loggerInit.
  */
 void logMessage(const std::string& msg, LOG_LEVELS level)
 {
@@ -118,21 +120,21 @@ void logMessage(const std::string& msg, LOG_LEVELS level)
 
 
 
-void setLogLevel(LOG_LEVELS level)
+void setLogLevel(LOG_LEVELS level) noexcept
 {
 	logLevel = level;
 }
 
 
 
-void setLogToCout(bool value)
+void setLogToCout(bool value) noexcept
 {
 	logToCout = value;
 }
 
 
 
-void setLogToFile(bool value)
+void setLogToFile(bool value) noexcept
 {
 	logToCout = value;
 }
@@ -142,7 +144,7 @@ void setLogToFile(bool value)
 /**
  * @brief Returns a timestamp formatted at HH:MM:SS
  */
-std::string getTimestamp(void)
+std::string getTimestamp(void) noexcept
 {
 	std::time_t current_time = time(nullptr);
 	std::tm local_time;
