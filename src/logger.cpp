@@ -7,7 +7,7 @@
 
 #include "logger.hpp"
 #include <fstream>
-#include <exception>
+#include <stdexcept>
 #include <filesystem>
 #include <ctime>
 #include <SDL2/SDL.h>

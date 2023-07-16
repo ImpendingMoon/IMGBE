@@ -27,6 +27,12 @@
     <ClCompile Include="src\emu\emusys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\emu\emumemory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\emu\memorybank.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.hpp">
@@ -39,6 +45,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\emu\emusys.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\emu\emumemory.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\emu\memorybank.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

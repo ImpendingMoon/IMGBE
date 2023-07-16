@@ -6,7 +6,7 @@
  */
 
 #include "program.hpp"
-#include <exception>
+#include <stdexcept>
 #include <filesystem>
 #include <fmt/core.h>
 #include "logger.hpp"

@@ -129,12 +129,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\emu\memorybank.cpp" />
+    <ClCompile Include="src\emu\emumemory.cpp" />
     <ClCompile Include="src\emu\emusys.cpp" />
     <ClCompile Include="src\logger.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\program.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\emu\memorybank.hpp" />
+    <ClInclude Include="src\emu\emumemory.hpp" />
     <ClInclude Include="src\emu\emusys.hpp" />
     <ClInclude Include="src\logger.hpp" />
     <ClInclude Include="src\main.hpp" />
