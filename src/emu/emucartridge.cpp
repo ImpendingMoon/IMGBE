@@ -84,6 +84,7 @@ void EmuCartridge::loadROM(std::filesystem::path file_path)
 
 	if(!validateHeader(header))
 	{
+		ROMFile.close();
 		throw std::runtime_error("ROM header is invalid!");
 	}
 
