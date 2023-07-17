@@ -12,6 +12,7 @@
 #include <SDL2/SDL.h>
 #include "logger.hpp"
 #include "window.hpp"
+#include "main.hpp"
 #include "emu/emusys.hpp"
 
 bool exitRequested = false;
@@ -39,6 +40,7 @@ void runMainLoop(int argc, char** argv) noexcept
 	} catch(std::invalid_argument& ex)
 	{
 		std::cerr << ex.what();
+		mainExit();
 		exit(1);
 	}
 
@@ -96,6 +98,7 @@ void handleArguments(int argc, char** argv)
 		{
 		case 'v':
 		{
+			setLogLevel(LOG_NOTHING);
 			std::cout
 				<< "IMGBE Version "
 				<< IMGBE_VERSION_STRING
@@ -106,6 +109,7 @@ void handleArguments(int argc, char** argv)
 				<< __TIME__
 				<< "."
 				<< std::endl;
+			mainExit();
 			exit(0);
 			break;
 		}
