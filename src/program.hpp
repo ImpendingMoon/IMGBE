@@ -2,7 +2,7 @@
  * @file program.cpp
  * @brief Handles the main loop
  * @author ImpendingMoon
- * @date 2023-07-15
+ * @date 2023-07-16
  */
 
 #pragma once
