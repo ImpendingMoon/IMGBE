@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <filesystem>
 #include <fmt/core.h>
+#include <SDL2/SDL.h>
 #include "logger.hpp"
 #include "emu/emusys.hpp"
 
@@ -16,11 +17,13 @@ bool exitRequested = false;
 double frameRate = 60;
 
 void handleArguments(int argc, char** argv);
+void handleEvents(void) noexcept;
 void throwInvalidArgument(const std::string& argument);
 std::string getKey(const std::string& pair, char delimiter);
 std::string getValue(const std::string& pair, char delimiter);
+void createEmuSystem(void) noexcept;
 
-EmuSys* emuSystem;
+EmuSys* emuSystem = nullptr;
 
 /**
  * @brief Runs the main program loop until an exit is requested
@@ -38,26 +41,13 @@ void runMainLoop(int argc, char** argv) noexcept
 		exit(1);
 	}
 
-	emuSystem = new EmuSys();
+	createEmuSystem();
 
 	logMessage("Starting main loop...", LOG_INFO);
 
-	// TEMP: Load hardcoded file
-	try
-	{
-		emuSystem->loadROM("D:\\ROM.GB");
-	} catch(std::exception& ex)
-	{
-		logMessage(fmt::format(
-			"Cannot load ROM {}. Error: {}",
-			"D:\\ROM.GB", ex.what()
-		));
-	}
-
 	while(!exitRequested)
 	{
-		// do stuff :D
-		requestExit();
+		handleEvents();
 	}
 
 	emuSystem->dumpSystem();
@@ -93,18 +83,37 @@ void handleArguments(int argc, char** argv)
 	{
 		std::string argument = argv[i];
 
-		// All valid arguments start with '-' and have '=' as a delimiter.
-		if(argument[0] != '-' || argument.find('=') == std::string::npos)
+		// All valid arguments start with '-'.
+		if(argument[0] != '-')
 		{
 			throwInvalidArgument(argument);
 		}
 
-		std::string key = getKey(argument.substr(1, argument.length()), '=');
-
-		switch(key[0]) // Originally supposed to be strings, didn't work.
+		switch(argument[1]) // Originally supposed to be strings, didn't work.
 		{
+		case 'v':
+		{
+			std::cout
+				<< "IMGBE Version "
+				<< IMGBE_VERSION_STRING
+				<< std::endl
+				<< "Compiled on "
+				<< __DATE__
+				<< ", "
+				<< __TIME__
+				<< "."
+				<< std::endl;
+			exit(0);
+			break;
+		}
+
 		case 'l': // Log level
 		{
+			if(argument.find('=') == std::string::npos)
+			{
+				throwInvalidArgument(argument);
+			}
+
 			std::string value = getValue(argument, '=');
 			int level;
 			try { level = std::atoi(value.c_str()); }
@@ -113,6 +122,9 @@ void handleArguments(int argc, char** argv)
 			if(level >= LOG_NOTHING && level <= LOG_DEBUG)
 			{
 				setLogLevel(static_cast<LOG_LEVELS>(level));
+			} else
+			{
+				throwInvalidArgument(argument);
 			}
 
 			break;
@@ -120,6 +132,11 @@ void handleArguments(int argc, char** argv)
 
 		case 'f': // File
 		{
+			if(argument.find('=') == std::string::npos)
+			{
+				throwInvalidArgument(argument);
+			}
+
 			std::filesystem::path file_path = getValue(argument, '=');
 			if(!std::filesystem::exists(file_path))
 			{
@@ -129,7 +146,58 @@ void handleArguments(int argc, char** argv)
 				);
 			}
 
-			// TODO: Open ROM file.
+			try
+			{
+				createEmuSystem();
+				emuSystem->loadROM(file_path);
+				emuSystem->start();
+			} catch(std::exception& ex)
+			{
+				logMessage(fmt::format(
+					"Couldn't load file {}. Error: {}",
+					file_path.string(), ex.what()
+				));
+			}
+		}
+		}
+	}
+}
+
+
+
+/**
+ * @brief Polls and handles all SDL_Events in the SDL Queue
+ */
+void handleEvents(void) noexcept
+{
+	SDL_Event event;
+
+	while(SDL_PollEvent(&event))
+	{
+		switch(event.type)
+		{
+		case SDL_QUIT:
+		{
+			requestExit();
+			break;
+		}
+
+		case SDL_DROPFILE:
+		{
+			std::filesystem::path file_path = event.drop.file;
+
+			try
+			{
+				createEmuSystem();
+				emuSystem->loadROM(file_path);
+				emuSystem->start();
+			} catch(std::exception& ex)
+			{
+				logMessage(fmt::format(
+					"Couldn't load file {}. Error: {}",
+					file_path.string(), ex.what()
+				));
+			}
 		}
 		}
 	}
@@ -201,4 +269,14 @@ std::string getValue(const std::string& pair, char delimiter)
 	}
 
 	return pair.substr(delim_index + 1, pair.length());
+}
+
+
+
+/**
+ * @brief Creates the emuSystem object, if it doesn't already exist.
+ */
+void createEmuSystem(void) noexcept
+{
+	if(emuSystem == nullptr) { emuSystem = new EmuSys(); }
 }
