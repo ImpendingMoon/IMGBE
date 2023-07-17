@@ -47,6 +47,8 @@ std::string EmuCartridge::getROMName(void)
  */
 void EmuCartridge::loadROM(std::filesystem::path file_path)
 {
+	using namespace std::filesystem;
+
 	logMessage(fmt::format(
 		"Attempting to load rom {}...", file_path.string()
 	));
@@ -99,7 +101,7 @@ void EmuCartridge::loadROM(std::filesystem::path file_path)
 	size_t rom_bank_count;
 	size_t ram_bank_count;
 	bool persistent_ram;
-	std::filesystem::path sav_file_path;
+	path sav_file_path;
 
 	switch(mbc)
 	{
@@ -187,6 +189,16 @@ void EmuCartridge::loadROM(std::filesystem::path file_path)
 		} else
 		{
 			SAVFile.close();
+
+			size_t sav_file_size = ram_bank_count * ERAM_SIZE;
+			if(file_size(sav_file_path) != sav_file_size)
+			{
+				resize_file(
+					sav_file_path,
+					sav_file_size
+				);
+			}
+
 			SAVFile.open(
 				sav_file_path,
 				std::ios_base::in | std::ios_base::binary
