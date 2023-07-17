@@ -11,6 +11,7 @@
 #include <SDL2/SDL.h>
 #include "logger.hpp"
 #include "program.hpp"
+#include "window.hpp"
 
 
 
@@ -65,6 +66,8 @@ void mainInit(void)
 		std::cerr << "Starting logger without logfile..." << std::endl;
 		loggerInit(LOG_DEBUG, false, true);
 	}
+
+	windowInit("IMGBE", 160, 144);
 }
 
 
@@ -76,5 +79,6 @@ void mainExit(void) noexcept
 {
 	logMessage("Exiting IMGBE...", LOG_INFO);
 	loggerExit();
+	windowExit();
 	SDL_Quit();
 }

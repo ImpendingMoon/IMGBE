@@ -11,6 +11,7 @@
 #include <fmt/core.h>
 #include <SDL2/SDL.h>
 #include "logger.hpp"
+#include "window.hpp"
 #include "emu/emusys.hpp"
 
 bool exitRequested = false;
@@ -48,6 +49,8 @@ void runMainLoop(int argc, char** argv) noexcept
 	while(!exitRequested)
 	{
 		handleEvents();
+		windowClear();
+		windowUpdate();
 	}
 
 	emuSystem->dumpSystem();
@@ -149,6 +152,7 @@ void handleArguments(int argc, char** argv)
 			try
 			{
 				createEmuSystem();
+				emuSystem->stop();
 				emuSystem->loadROM(file_path);
 				emuSystem->start();
 			} catch(std::exception& ex)
@@ -189,6 +193,7 @@ void handleEvents(void) noexcept
 			try
 			{
 				createEmuSystem();
+				emuSystem->stop();
 				emuSystem->loadROM(file_path);
 				emuSystem->start();
 			} catch(std::exception& ex)

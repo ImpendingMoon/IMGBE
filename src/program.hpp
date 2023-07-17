@@ -7,7 +7,7 @@
 
 #pragma once
 
-#define IMGBE_VERSION_STRING "0.1.0-devel"
+#define IMGBE_VERSION_STRING "0.1.1-devel"
 
 /**
  * @brief Runs the main program loop until an exit is requested
