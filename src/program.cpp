@@ -90,7 +90,9 @@ void handleEvents(void) noexcept
 				logMessage(fmt::format(
 					"Couldn't load file {}. Error: {}",
 					file_path.string(), ex.what()
-				));
+				),
+					LOG_ERRORS
+				);
 			}
 		}
 		}

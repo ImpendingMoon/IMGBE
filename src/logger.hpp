@@ -39,10 +39,10 @@ void loggerExit(void) noexcept;
 /**
  * @brief Logs a message
  * @param msg
- * @param level default=LOG_INFO
+ * @param level
  * @throws std::runtime_error if run before loggerInit.
  */
-void logMessage(const std::string& msg, LOG_LEVELS level = LOG_INFO);
+void logMessage(const std::string& msg, LOG_LEVELS level);
 
 void setLogLevel(LOG_LEVELS level) noexcept;
 

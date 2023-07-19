@@ -51,7 +51,9 @@ void EmuCartridge::loadROM(std::filesystem::path file_path)
 
 	logMessage(fmt::format(
 		"Attempting to load rom {}...", file_path.string()
-	));
+	),
+		LOG_INFO
+	);
 
 
 	if(mem == nullptr)
@@ -94,7 +96,9 @@ void EmuCartridge::loadROM(std::filesystem::path file_path)
 
 	logMessage(fmt::format(
 		"ROM header is valid. Attempting to load ROM {}...", ROMName
-	));
+	),
+		LOG_INFO
+	);
 
 	// Bank controller info is held at $0147
 	BankController mbc = static_cast<BankController>(header.at(0x47));
@@ -228,7 +232,7 @@ void EmuCartridge::loadROM(std::filesystem::path file_path)
 	if(SAVFile.is_open()) { SAVFile.close(); }
 	ROMFile.close();
 
-	logMessage("Successfully loaded ROM.");
+	logMessage("Successfully loaded ROM.", LOG_INFO);
 }
 
 
