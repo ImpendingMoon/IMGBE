@@ -17,7 +17,7 @@
 
 void throwInvalidArgument(const std::string& argument);
 
-
+bool isMainInitialized = false;
 
 int main(int argc, char** argv)
 {
@@ -51,6 +51,8 @@ int main(int argc, char** argv)
  */
 void mainInit(void)
 {
+	if(isMainInitialized) { return; }
+
 	int err;
 	err = SDL_Init(
 		0
@@ -77,6 +79,8 @@ void mainInit(void)
 	}
 
 	windowInit("IMGBE", 160, 144);
+
+	isMainInitialized = true;
 }
 
 
@@ -144,6 +148,7 @@ void handleArguments(int argc, char** argv)
 			try
 			{
 				level = std::atoi(value.c_str());
+				mainInit();
 			} catch(std::invalid_argument&)
 			{
 				throwInvalidArgument(argument);
@@ -169,6 +174,7 @@ void handleArguments(int argc, char** argv)
 
 			std::filesystem::path file_path = getValue(argument, '=');
 			
+			mainInit();
 			loadEmuSystem(file_path);
 		}
 		}
