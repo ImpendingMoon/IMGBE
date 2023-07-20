@@ -7,7 +7,7 @@
 
 #pragma once
 
-#define IMGBE_VERSION_STRING "0.1.3-devel"
+constexpr const char* IMGBE_VERSION_STRING = "0.1.3-devel";
 
 #include <iostream>
 #include <filesystem>
