@@ -8,6 +8,7 @@
 #include "program.hpp"
 #include <stdexcept>
 #include <filesystem>
+#include <cstdint>
 #include <fmt/core.h>
 #include <SDL2/SDL.h>
 #include "logger.hpp"
@@ -31,9 +32,21 @@ void runMainLoop(void) noexcept
 
 	while(!exitRequested)
 	{
+		uint64_t start_time = SDL_GetPerformanceCounter();
+
 		handleEvents();
 		windowClear();
 		windowUpdate();
+
+		uint64_t end_time = SDL_GetPerformanceCounter();
+		double seconds_elapsed =
+			(end_time - start_time)
+			/ static_cast<double>(SDL_GetPerformanceFrequency());
+
+		SDL_Delay(
+			static_cast<uint32_t>(
+			floor((1000 / frameRate) - seconds_elapsed))
+		);
 	}
 
 	if(emuSystem != nullptr)
@@ -78,22 +91,7 @@ void handleEvents(void) noexcept
 		case SDL_DROPFILE:
 		{
 			std::filesystem::path file_path = event.drop.file;
-
-			try
-			{
-				createEmuSystem();
-				emuSystem->stop();
-				emuSystem->loadROM(file_path);
-				emuSystem->start();
-			} catch(std::exception& ex)
-			{
-				logMessage(fmt::format(
-					"Couldn't load file {}. Error: {}",
-					file_path.string(), ex.what()
-				),
-					LOG_ERRORS
-				);
-			}
+			loadEmuSystem(file_path);
 		}
 		}
 	}
