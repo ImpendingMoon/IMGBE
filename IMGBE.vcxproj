@@ -130,6 +130,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\emu\emucartridge.cpp" />
+    <ClCompile Include="src\emu\emucpu.cpp" />
+    <ClCompile Include="src\emu\emuregisters.cpp" />
     <ClCompile Include="src\emu\memorybank.cpp" />
     <ClCompile Include="src\emu\emumemory.cpp" />
     <ClCompile Include="src\emu\emusys.cpp" />
@@ -140,6 +142,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\emu\emucartridge.hpp" />
+    <ClInclude Include="src\emu\emucpu.hpp" />
+    <ClInclude Include="src\emu\emuregisters.hpp" />
     <ClInclude Include="src\emu\memorybank.hpp" />
     <ClInclude Include="src\emu\emumemory.hpp" />
     <ClInclude Include="src\emu\emusys.hpp" />
