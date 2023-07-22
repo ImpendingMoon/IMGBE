@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-21
+ * @date 2023-07-22
  */
 
 #include "emucpu.hpp"
@@ -34,6 +34,10 @@ void EmuCPU::setMemPtr(EmuMemory* memory)
 int EmuCPU::step(void)
 {
 	assert(mem != nullptr);
+
+	// TODO: Handle interrupts
+
+	regs.mem.io.ienable = nextInterruptState;
 
 	int cycles = 4;
 	uint16_t source = regs.cpu.pc;
@@ -1280,6 +1284,486 @@ int EmuCPU::step(void)
 			cycles += CP8(&regs.cpu.a, &regs.cpu.a);
 			break;
 		}
+		case 0xC0:
+		{
+			instruction = "RET NZ";
+			bool not_zero = !regs.flags.zero;
+			cycles += RET(&not_zero);
+			break;
+		}
+		case 0xC1:
+		{
+			instruction = "POP BC";
+			cycles += POP(&regs.cpu.bc);
+			break;
+		}
+		case 0xC2:
+		{
+			instruction = "JP NZ a16";
+			bool not_zero = !regs.flags.zero;
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += JUMP(&absolute_address, &not_zero);
+
+			instruction = fmt::format("JP NZ ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xC3:
+		{
+			instruction = "JP a16";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += JUMP(&absolute_address, nullptr);
+
+			instruction = fmt::format("JP ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xC4:
+		{
+			instruction = "CALL NZ a16";
+			bool not_zero = !regs.flags.zero;
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += CALL(&absolute_address, &not_zero);
+
+			instruction = fmt::format("CALL NZ ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xC5:
+		{
+			instruction = "PUSH BC";
+			cycles += PUSH(&regs.cpu.bc);
+			break;
+		}
+		case 0xC6:
+		{
+			instruction = "ADD A, d8";
+			instruction = fmt::format("ADD A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += ADDLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xC7:
+		{
+			instruction = "RST $0000";
+			cycles += RST(0x0000);
+			break;
+		}
+		case 0xC8:
+		{
+			instruction = "RET Z";
+			cycles += RET(&regs.flags.zero);
+			break;
+		}
+		case 0xC9:
+		{
+			instruction = "RET";
+			cycles += RET(nullptr);
+			break;
+		}
+		case 0xCA:
+		{
+			instruction = "JP Z a16";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += JUMP(&absolute_address, &regs.flags.zero);
+
+			instruction = fmt::format("JP Z ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xCB:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xCC:
+		{
+			instruction = "CALL Z a16";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += CALL(&absolute_address, &regs.flags.zero);
+
+			instruction = fmt::format("CALL Z ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xCD:
+		{
+			instruction = "CALL a16";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += CALL(&absolute_address, nullptr);
+
+			instruction = fmt::format("CALL ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xCE:
+		{
+			instruction = "ADC A, d8";
+			instruction = fmt::format("ADC A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += ADCLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xCF:
+		{
+			instruction = "RST $0008";
+			cycles += RST(0x0008);
+			break;
+		}
+		case 0xD0:
+		{
+			instruction = "RET NC";
+			bool not_carry = !regs.flags.carry;
+			cycles += RET(&not_carry);
+			break;
+		}
+		case 0xD1:
+		{
+			instruction = "POP DE";
+			cycles += POP(&regs.cpu.de);
+			break;
+		}
+		case 0xD2:
+		{
+			instruction = "JP NC a16";
+			bool not_carry = !regs.flags.carry;
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += JUMP(&absolute_address, &not_carry);
+
+			instruction = fmt::format("JP NC ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xD3:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xD4:
+		{
+			instruction = "CALL NC a16";
+			bool not_carry = !regs.flags.carry;
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += CALL(&absolute_address, &not_carry);
+
+			instruction = fmt::format("CALL NC ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xD5:
+		{
+			instruction = "PUSH DE";
+			cycles += PUSH(&regs.cpu.de);
+			break;
+		}
+		case 0xD6:
+		{
+			instruction = "SUB A, d8";
+			instruction = fmt::format("SUB A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += SUBLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xD7:
+		{
+			instruction = "RST $0010";
+			cycles += RST(0x0010);
+			break;
+		}
+		case 0xD8:
+		{
+			instruction = "RET C";
+			cycles += RET(&regs.flags.carry);
+			break;
+		}
+		case 0xD9:
+		{
+			instruction = "RETI";
+			cycles += RETI();
+			break;
+		}
+		case 0xDA:
+		{
+			instruction = "JP C a16";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += JUMP(&absolute_address, &regs.flags.carry);
+
+			instruction = fmt::format("JP C ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xDB:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xDC:
+		{
+			instruction = "CALL C a16";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += CALL(&absolute_address, &regs.flags.carry);
+
+			instruction = fmt::format("CALL C ${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xDD:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xDE:
+		{
+			instruction = "SBC A, d8";
+			instruction = fmt::format("SBC A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += SBCLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xDF:
+		{
+			instruction = "RST $0018";
+			cycles += RST(0x0018);
+			break;
+		}
+		case 0xE0:
+		{
+			instruction = "LDH [a8], A";
+			uint8_t offset;
+			cycles += LOAD8(&offset, &regs.cpu.pc);
+			uint16_t absolute_address = 0xFF00 + offset;
+			cycles += STORE8(&absolute_address, &regs.cpu.a);
+
+			instruction = fmt::format("LDH [{}], A", offset);
+
+			break;
+		}
+		case 0xE1:
+		{
+			instruction = "POP HL";
+			cycles += POP(&regs.cpu.hl);
+			break;
+		}
+		case 0xE2:
+		{
+			instruction = "LD [C], A";
+			uint16_t absolute_address = 0xFF00 + regs.cpu.c;
+			cycles += STORE8(&absolute_address, &regs.cpu.a);
+			break;
+		}
+		case 0xE3:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xE4:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xE5:
+		{
+			instruction = "PUSH HL";
+			cycles += PUSH(&regs.cpu.hl);
+			break;
+		}
+		case 0xE6:
+		{
+			instruction = "AND A, d8";
+			instruction = fmt::format("AND A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += ANDLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xE7:
+		{
+			instruction = "RST $0020";
+			cycles += RST(0x0020);
+			break;
+		}
+		case 0xE8:
+		{
+			instruction = "ADD SP, s8";
+			uint8_t value;
+			cycles += LOAD8(&value, &regs.cpu.pc);
+			cycles += ADDSIGNED16(&regs.cpu.sp, &value);
+
+			instruction = fmt::format("ADD SP, 0x{:02X}", (int8_t)value);
+
+			break;
+		}
+		case 0xE9:
+		{
+			instruction = "JP HL";
+			cycles += JUMP(&regs.cpu.hl, nullptr);
+			break;
+		}
+		case 0xEA:
+		{
+			instruction = "LD [a16], A";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += STORE8(&absolute_address, &regs.cpu.a);
+
+			instruction = fmt::format("LD [${:04X}], A", absolute_address);
+
+			break;
+		}
+		case 0xEB:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xEC:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xED:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xEE:
+		{
+			instruction = "XOR A, d8";
+			instruction = fmt::format("XOR A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += XORLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xEF:
+		{
+			instruction = "RST $0028";
+			cycles += RST(0x0028);
+			break;
+		}
+		case 0xF0:
+		{
+			instruction = "LDH A, [a8]";
+			uint8_t offset;
+			cycles += LOAD8(&offset, &regs.cpu.pc);
+			uint16_t absolute_address = 0xFF00 + offset;
+			cycles += LOAD8(&regs.cpu.a, &absolute_address);
+
+			instruction = fmt::format("LDH A, [{}]", offset);
+
+			break;
+		}
+		case 0xF1:
+		{
+			instruction = "POP AF";
+			cycles += POP(&regs.cpu.af);
+			break;
+		}
+		case 0xF2:
+		{
+			instruction = "LDH A, [c]";
+			uint16_t absolute_address = 0xFF00 + regs.cpu.c;
+			cycles += LOAD8(&regs.cpu.a, &absolute_address);
+			break;
+		}
+		case 0xF3:
+		{
+			instruction = "DI";
+			cycles += DI();
+			break;
+		}
+		case 0xF4:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xF5:
+		{
+			instruction = "PUSH AF";
+			cycles += PUSH(&regs.cpu.af);
+			break;
+		}
+		case 0xF6:
+		{
+			instruction = "OR A, d8";
+			instruction = fmt::format("OR A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += ORLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xF7:
+		{
+			instruction = "RST $0030";
+			cycles += RST(0x0030);
+			break;
+		}
+		case 0xF8:
+		{
+			instruction = "LD HL, SP + s8";
+			uint16_t sp = regs.cpu.sp;
+			uint8_t offset;
+			cycles += LOAD8(&offset, &regs.cpu.pc);
+			cycles += ADDSIGNED16(&sp, &offset);
+			cycles += MOVE16(&regs.cpu.hl, &sp);
+
+			instruction = fmt::format("LD HL, SP + 0x{:02X}", (int8_t)offset);
+
+			break;
+		}
+		case 0xF9:
+		{
+			instruction = "LD SP, HL";
+			cycles += MOVE16(&regs.cpu.sp, &regs.cpu.hl);
+			break;
+		}
+		case 0xFA:
+		{
+			instruction = "LD A, [a16]";
+			uint16_t absolute_address;
+			cycles += LOAD16(&absolute_address, &regs.cpu.pc);
+			cycles += LOAD8(&regs.cpu.a, &absolute_address);
+
+			instruction = fmt::format("LD A, [${:04X}", absolute_address);
+
+			break;
+		}
+		case 0xFB:
+		{
+			instruction = "EI";
+			cycles += EI();
+			break;
+		}
+		case 0xFC:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xFD:
+		{
+			ILLEGAL_INSTRUCTION(opcode, source);
+			break;
+		}
+		case 0xFE:
+		{
+			instruction = "CP A, d8";
+			instruction = fmt::format("CP A, 0x{:02X}", mem->readByte(regs.cpu.pc));
+
+			cycles += CPLOAD8(&regs.cpu.a, &regs.cpu.pc);
+			break;
+		}
+		case 0xFF:
+		{
+			instruction = "RST $0038";
+			cycles += RST(0x0038);
+			break;
+		}
 		default:
 		{
 			throw std::runtime_error(fmt::format(
@@ -1364,6 +1848,15 @@ int EmuCPU::STORE8(uint16_t* target_address, uint8_t* source)
 	mem->writeByte(*target_address, *source);
 
 	// There are no instructions that store to an immediate value.
+
+	return 4;
+}
+
+
+
+int EmuCPU::MOVE16(uint16_t* target, uint16_t* source)
+{
+	*target = *source;
 
 	return 4;
 }
@@ -1532,6 +2025,12 @@ int EmuCPU::ADDLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = false;
 
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
+
 	return 4;
 }
 
@@ -1540,6 +2039,18 @@ int EmuCPU::ADDLOAD8(uint8_t* target, uint16_t* source_address)
 int EmuCPU::ADD16(uint16_t* target, uint16_t* source)
 {
 	*target += *source;
+
+	return 4;
+}
+
+
+
+int EmuCPU::ADDSIGNED16(uint16_t* target, uint8_t* source)
+{
+	int8_t signed_source;
+	memcpy_s(&signed_source, 1, source, 1);
+
+	*target += signed_source;
 
 	return 4;
 }
@@ -1575,6 +2086,12 @@ int EmuCPU::ADCLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = false;
 
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
+
 	return 4;
 }
 
@@ -1606,6 +2123,12 @@ int EmuCPU::SUBLOAD8(uint8_t* target, uint16_t* source_address)
 
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = true;
+
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
 
 	return 4;
 }
@@ -1641,6 +2164,12 @@ int EmuCPU::SBCLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = true;
 
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
+
 	return 4;
 }
 
@@ -1670,6 +2199,12 @@ int EmuCPU::ANDLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.sub = false;
 	regs.flags.half_carry = true;
 	regs.flags.carry = false;
+
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
 
 	return 4;
 }
@@ -1701,6 +2236,12 @@ int EmuCPU::XORLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.half_carry = false;
 	regs.flags.carry = false;
 
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
+
 	return 4;
 }
 
@@ -1730,6 +2271,12 @@ int EmuCPU::ORLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.half_carry = false;
 	regs.flags.carry = false;
 
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
+
 	return 4;
 }
 
@@ -1755,6 +2302,12 @@ int EmuCPU::CPLOAD8(uint8_t* target, uint16_t* source_address)
 	regs.flags.half_carry = willHalfUnderflow8(*target, value);
 	regs.flags.zero = *target - value == 0;
 	regs.flags.sub = true;
+
+	// Immediate accesses always increment program counter
+	if(source_address == &regs.cpu.pc)
+	{
+		regs.cpu.pc++;
+	}
 
 	return 4;
 }
@@ -1864,6 +2417,21 @@ int EmuCPU::DAA(void)
 
 
 
+int EmuCPU::JUMP(uint16_t* address, bool* condition)
+{
+	// If condition exists and is false, do not jump.
+	if(condition != nullptr && !(*condition))
+	{
+		return 0;
+	}
+
+	regs.cpu.pc = *address;
+
+	return 0;
+}
+
+
+
 int EmuCPU::JUMPR(uint8_t* address, bool* condition)
 {
 	// If condition exists and is false, do not jump.
@@ -1880,5 +2448,81 @@ int EmuCPU::JUMPR(uint8_t* address, bool* condition)
 
 	return 4;
 }
+
+
+
+int EmuCPU::CALL(uint16_t* address, bool* condition)
+{
+	// If condition exists and is false, do not jump.
+	if(condition != nullptr && !(*condition))
+	{
+		return 0;
+	}
+
+	PUSH(&regs.cpu.pc);
+	JUMP(address, nullptr);
+
+	return 20;
+}
+
+
+
+int EmuCPU::RET(bool* condition)
+{
+	// If condition exists and is false, do not jump.
+	if(condition != nullptr && !(*condition))
+	{
+		return 0;
+	}
+
+	POP(&regs.cpu.pc);
+	regs.cpu.pc++; // So we don't land at the same CALL instruction.
+
+	return 12;
+}
+
+
+
+int EmuCPU::RETI(void)
+{
+	nextInterruptState = true;
+	RET(nullptr);
+	return 12;
+}
+
+
+
+int EmuCPU::RST(uint16_t vector)
+{
+	PUSH(&regs.cpu.pc);
+	JUMP(&vector, nullptr);
+	return 12;
+}
+
+
+
+int EmuCPU::EI(void)
+{
+	nextInterruptState = true;
+	return 0;
+}
+
+int EmuCPU::DI(void)
+{
+	nextInterruptState = false;
+	return 0;
+}
+
+
+
+void EmuCPU::ILLEGAL_INSTRUCTION(uint8_t opcode, uint16_t source)
+{
+	throw std::runtime_error(fmt::format(
+		"Illegal instruction! Opcode: 0x{:02X}, Source: ${:04X}",
+		opcode, source
+	));
+}
+
+
 
 // Note: this file is massive.

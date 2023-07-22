@@ -2,7 +2,7 @@
  * @file program.cpp
  * @brief Handles the main loop
  * @author ImpendingMoon
- * @date 2023-07-21
+ * @date 2023-07-22
  */
 
 #include "program.hpp"
@@ -57,7 +57,7 @@ void runMainLoop(void) noexcept
 			/ static_cast<double>(SDL_GetPerformanceFrequency());
 
 		SDL_Delay(
-			seconds_elapsed >= 0
+			(seconds_elapsed < (1 / frameRate))
 			?
 			static_cast<uint32_t>(
 			floor((1000 / frameRate) - seconds_elapsed))

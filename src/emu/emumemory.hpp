@@ -2,7 +2,7 @@
  * @file emu/emumemory.hpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-07-16
+ * @date 2023-07-22
  */
 
 #pragma once
@@ -165,8 +165,8 @@ constexpr size_t ECHO_SIZE = ECHO_END - ECHO_START + 1;
 constexpr size_t OAM_START = 0xFE00;
 constexpr size_t OAM_END = 0xFE9F;
 constexpr size_t OAM_SIZE = OAM_END - OAM_START + 1;
-constexpr size_t IOREG_START = 0xFEA0;
-constexpr size_t IOREG_END = 0xFF00;
+constexpr size_t IOREG_START = 0xFF00;
+constexpr size_t IOREG_END = 0xFF7F;
 constexpr size_t IOREG_SIZE = IOREG_END - IOREG_START + 1;
 constexpr size_t HRAM_START = 0xFF80;
 constexpr size_t HRAM_END = 0xFFFE;

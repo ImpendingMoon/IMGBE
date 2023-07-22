@@ -2,7 +2,7 @@
  * @file emu/emumemory.cpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-07-16
+ * @date 2023-07-22
  */
 
 #include "emumemory.hpp"
@@ -90,7 +90,7 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
 
 	else if(address >= WRAM1_START && address <= WRAM1_END)
 	{
-		if(WRAM1Index >= WRAM1BankCount || ERAMBankCount == 0)
+		if(WRAM1Index >= WRAM1BankCount || WRAM1BankCount == 0)
 		{
 			if(ignore_illegal) { return 0; }
 
@@ -144,26 +144,31 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
  */
 void EmuMemory::writeByte(uint16_t address, uint8_t value)
 {
-	if(address >= ROM0_START && address <= ROM0_END)
-	{
-		ROM0.writeByte(address, value);
-	}
+	// Shouldn't be able to write to ROM, dingus.
+	
+	//if(address >= ROM0_START && address <= ROM0_END)
+	//{
+	//	ROM0.writeByte(address, value);
+	//	return;
+	//}
 
-	else if(address >= ROM1_START && address <= ROM1_END)
-	{
-		if(ROM1Index >= ROM1BankCount || ROM1BankCount == 0)
-		{
-			throw std::out_of_range(fmt::format(
-				"Illegal ROM1 Bank Write! Current Bank: {} - Max Bank: {}",
-				ROM1Index, ROM1BankCount - 1
-			));
-		}
-		ROM1.at(ROM1Index).writeByte(address, value);
-	}
+	//else if(address >= ROM1_START && address <= ROM1_END)
+	//{
+	//	if(ROM1Index >= ROM1BankCount || ROM1BankCount == 0)
+	//	{
+	//		throw std::out_of_range(fmt::format(
+	//			"Illegal ROM1 Bank Write! Current Bank: {} - Max Bank: {}",
+	//			ROM1Index, ROM1BankCount - 1
+	//		));
+	//	}
+	//	ROM1.at(ROM1Index).writeByte(address, value);
+	//	return;
+	//}
 
-	else if(address >= VRAM_START && address <= VRAM_END)
+	if(address >= VRAM_START && address <= VRAM_END)
 	{
 		VRAM.writeByte(address, value);
+		return;
 	}
 
 	else if(address >= ERAM_START && address <= ERAM_END)
@@ -177,16 +182,18 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
 		}
 		ERAM.at(ERAMIndex).writeByte(address, value);
 		ERAMDirty = true;
+		return;
 	}
 
 	else if(address >= WRAM0_START && address <= WRAM0_END)
 	{
 		WRAM0.writeByte(address, value);
+		return;
 	}
 
 	else if(address >= WRAM1_START && address <= WRAM1_END)
 	{
-		if(WRAM1Index >= WRAM1BankCount || ERAMBankCount == 0)
+		if(WRAM1Index >= WRAM1BankCount || WRAM1BankCount == 0)
 		{
 			throw std::out_of_range(fmt::format(
 				"Illegal WRAM1 Bank Write! Current Bank: {} - Max Bank: {}",
@@ -194,31 +201,37 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
 			));
 		}
 		WRAM1.at(WRAM1Index).writeByte(address, value);
+		return;
 	}
 
 	else if(address >= ECHO_START && address <= ECHO_END)
 	{
 		writeByte(address - 0x2000, value);
+		return;
 	}
 
 	else if(address >= OAM_START && address <= OAM_END)
 	{
 		OAM.writeByte(address, value);
+		return;
 	}
 
 	else if(address >= IOREG_START && address <= IOREG_END)
 	{
 		IOREG.writeByte(address, value);
+		return;
 	}
 
 	else if(address >= HRAM_START && address <= HRAM_END)
 	{
 		HRAM.writeByte(address, value);
+		return;
 	}
 
 	else if(address == IEREG_START)
 	{
 		IEREG.writeByte(address, value);
+		return;
 	}
 
 	throw std::out_of_range(fmt::format(

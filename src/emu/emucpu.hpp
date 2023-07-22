@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-21
+ * @date 2023-07-22
  */
 
 #pragma once
@@ -36,11 +36,15 @@ private:
 	RegisterSet regs;
 	EmuMemory* mem;
 
+	// EI and DI are delayed for one instruction.
+	bool nextInterruptState = true;
+
 	// Instructions return additional cycles used for memory access.
 	int MOVE8(uint8_t* target, uint8_t* source);
 	int LOAD8(uint8_t* target, uint16_t* source_address);
 	int STORE8(uint16_t* target_address, uint8_t* source);
 
+	int MOVE16(uint16_t* target, uint16_t* source);
 	int LOAD16(uint16_t* target, uint16_t* source_address);
 	int STORE16(uint16_t* target_address, uint16_t* source);
 
@@ -58,6 +62,7 @@ private:
 	int ADD8(uint8_t* target, uint8_t* source);
 	int ADDLOAD8(uint8_t* target, uint16_t* source_address);
 	int ADD16(uint16_t* target, uint16_t* source);
+	int ADDSIGNED16(uint16_t* target, uint8_t* source);
 
 	int ADC8(uint8_t* target, uint8_t* source);
 	int ADCLOAD8(uint8_t* target, uint16_t* source_address);
@@ -87,7 +92,17 @@ private:
 
 	int DAA(void);
 
+	int JUMP(uint16_t* address, bool* condition);
 	int JUMPR(uint8_t* address, bool* condition);
+	int CALL(uint16_t* address, bool* condition);
+	int RET(bool* condition);
+	int RETI(void);
+	int RST(uint16_t vector);
+
+	int EI(void);
+	int DI(void);
+
+	void ILLEGAL_INSTRUCTION(uint8_t opcode, uint16_t source);
 
 	static inline bool willOverflow8(uint8_t a, uint8_t b)
 	{
