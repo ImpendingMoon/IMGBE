@@ -13,7 +13,8 @@
 
 EmuSys::EmuSys() :
 	mem(),
-	cart(&mem)
+	cart(&mem),
+	cpu(&mem)
 {
 	logMessage("Emulated system created.", LOG_INFO);
 }
@@ -35,6 +36,7 @@ EmuSys::~EmuSys()
 void EmuSys::loadROM(std::filesystem::path file_path)
 {
 	cart.loadROM(file_path);
+	loaded = true;
 }
 
 
@@ -45,6 +47,12 @@ void EmuSys::loadROM(std::filesystem::path file_path)
  */
 void EmuSys::step(void)
 {
+	if(!running)
+	{
+		throw std::runtime_error("Cannot step system that is not running!");
+	}
+
+	cpu.step();
 }
 
 
@@ -55,6 +63,14 @@ void EmuSys::step(void)
  */
 void EmuSys::start(void)
 {
+	if(!loaded)
+	{
+		throw std::runtime_error("Cannot start system without loaded ROM!");
+	}
+
+	cpu.initRegs();
+
+	running = true;
 }
 
 
@@ -64,6 +80,7 @@ void EmuSys::start(void)
  */
 void EmuSys::pause(void) noexcept
 {
+	paused = true;
 }
 
 
@@ -73,6 +90,7 @@ void EmuSys::pause(void) noexcept
  */
 void EmuSys::resume(void) noexcept
 {
+	paused = false;
 }
 
 
@@ -82,6 +100,7 @@ void EmuSys::resume(void) noexcept
  */
 void EmuSys::stop(void) noexcept
 {
+	running = false;
 }
 
 
@@ -92,6 +111,13 @@ void EmuSys::stop(void) noexcept
  */
 void EmuSys::reset(void)
 {
+	if(!loaded)
+	{
+		throw std::runtime_error("Cannot start system without loaded ROM!");
+	}
+
+	stop();
+	start();
 }
 
 

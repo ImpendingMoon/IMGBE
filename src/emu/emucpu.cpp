@@ -2,12 +2,13 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-19
+ * @date 2023-07-21
  */
 
 #include "emucpu.hpp"
 #include <assert.h>
 #include <fmt/core.h>
+#include "../logger.hpp"
 
 EmuCPU::EmuCPU(EmuMemory* memory)
 {
@@ -15,7 +16,13 @@ EmuCPU::EmuCPU(EmuMemory* memory)
 }
 
 EmuCPU::~EmuCPU()
-{}
+{
+}
+
+void EmuCPU::setMemPtr(EmuMemory* memory)
+{
+	mem = memory;
+}
 
 
 
@@ -29,6 +36,7 @@ int EmuCPU::step(void)
 	assert(mem != nullptr);
 
 	int cycles = 4;
+	uint16_t source = regs.cpu.pc;
 	bool second_bank = false;
 	std::string instruction = "UNIMPLEMENTED";
 
@@ -147,8 +155,8 @@ int EmuCPU::step(void)
 		default:
 		{
 			throw std::runtime_error(fmt::format(
-				"Unhandled instruction! Opcode: {:02X}, Source: {:04X}",
-				opcode, regs.cpu.pc - 1
+				"Unhandled instruction! Opcode: 0x{:02X}, Source: ${:04X}",
+				opcode, source
 			));
 		}
 		}
@@ -159,14 +167,43 @@ int EmuCPU::step(void)
 		default:
 		{
 			throw std::runtime_error(fmt::format(
-				"Unhandled 2 byte instruction! Opcode: {:04X}, Source: {:04X}",
-				0xCB00 + opcode, regs.cpu.pc - 2
+				"Unhandled instruction! Opcode: 0x{:04X}, Source: ${:04X}",
+				0xCB00 + opcode, source
 			));
 		}
 		}
 	}
 
+	logMessage(fmt::format(
+		"Executed instruction {}. Source: ${:04X} - Cycles: {}",
+		instruction, source, cycles
+	),
+		LOG_DEBUG
+	);
+
 	return cycles;
+}
+
+
+
+/**
+ * @brief Initializes registers to after-BIOS defaults
+ * @param void Soon to be model, currently only DMG
+ */
+void EmuCPU::initRegs(void)
+{
+	// TODO: Make this a data structure, and have separate ones for each model.
+	// TODO: Memory registers.
+	regs.cpu.a = 0x01;
+	regs.cpu.f = 0b10000000;
+	regs.cpu.b = 0x00;
+	regs.cpu.c = 0x13;
+	regs.cpu.d = 0x00;
+	regs.cpu.e = 0xD8;
+	regs.cpu.h = 0x01;
+	regs.cpu.l = 0x4D;
+	regs.cpu.pc = 0x0100;
+	regs.cpu.sp = 0xFFFE;
 }
 
 

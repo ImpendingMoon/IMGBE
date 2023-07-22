@@ -2,7 +2,7 @@
  * @file program.cpp
  * @brief Handles the main loop
  * @author ImpendingMoon
- * @date 2023-07-19
+ * @date 2023-07-21
  */
 
 #include "program.hpp"
@@ -35,6 +35,19 @@ void runMainLoop(void) noexcept
 		uint64_t start_time = SDL_GetPerformanceCounter();
 
 		handleEvents();
+
+		if(emuSystem != nullptr && emuSystem->isRunning())
+		{
+			try
+			{
+				emuSystem->step();
+			} catch(std::exception& ex)
+			{
+				logMessage(ex.what(), LOG_DEBUG);
+			}
+			SDL_Delay(1000); // TEMP: Only while instructions are added.
+		}
+
 		windowClear();
 		windowUpdate();
 
@@ -44,8 +57,12 @@ void runMainLoop(void) noexcept
 			/ static_cast<double>(SDL_GetPerformanceFrequency());
 
 		SDL_Delay(
+			seconds_elapsed >= 0
+			?
 			static_cast<uint32_t>(
 			floor((1000 / frameRate) - seconds_elapsed))
+			:
+			0
 		);
 	}
 

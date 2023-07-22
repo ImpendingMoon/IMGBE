@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-20
+ * @date 2023-07-21
  */
 
 #pragma once
@@ -25,6 +25,12 @@ public:
 	 * @throws std::runtime_error on illegal or unimplemented instruction.
 	 */
 	int step(void);
+
+	/**
+	 * @brief Initializes registers to after-BIOS defaults
+	 * @param void Soon to be model, currently only DMG
+	 */
+	void initRegs(void);
 
 private:
 	RegisterSet regs;

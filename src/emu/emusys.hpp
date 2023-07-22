@@ -2,7 +2,7 @@
  * @file emu/emusys.hpp
  * @brief Implements the main emulated system
  * @author ImpendingMoon
- * @date 2023-07-16
+ * @date 2023-07-21
  */
 
 #pragma once
@@ -10,6 +10,7 @@
 #include <filesystem>
 #include "emumemory.hpp"
 #include "emucartridge.hpp"
+#include "emucpu.hpp"
 
 class EmuSys
 {
@@ -75,4 +76,5 @@ private:
 
 	EmuMemory mem;
 	EmuCartridge cart;
+	EmuCPU cpu;
 };
