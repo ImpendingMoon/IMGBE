@@ -62,8 +62,12 @@ int EmuCPU::step(void)
 		}
 		case 0x01:
 		{
+			// Base string kept for ease of lookup
 			instruction = "LD BC, d16";
 			cycles += LOAD16(&regs.cpu.bc, &regs.cpu.pc);
+
+			instruction = fmt::format("LD BC, 0x{:04X}", regs.cpu.bc);
+
 			break;
 		}
 		case 0x02:
@@ -94,6 +98,9 @@ int EmuCPU::step(void)
 		{
 			instruction = "LD B, d8";
 			cycles += LOAD8(&regs.cpu.b, &regs.cpu.pc);
+
+			instruction = fmt::format("LD B, 0x{:02X}", regs.cpu.b);
+
 			break;
 		}
 		case 0x07:
@@ -108,6 +115,9 @@ int EmuCPU::step(void)
 			uint16_t target_address;
 			cycles += LOAD16(&target_address, &regs.cpu.pc);
 			cycles += STORE16(&target_address, &regs.cpu.sp);
+
+			instruction = fmt::format("LD [0x{:04X}], SP", target_address);
+
 			break;
 		}
 		case 0x09:
@@ -144,6 +154,9 @@ int EmuCPU::step(void)
 		{
 			instruction = "LD C, d8";
 			cycles += LOAD8(&regs.cpu.c, &regs.cpu.pc);
+
+			instruction = fmt::format("LD C, 0x{:02X}", regs.cpu.c);
+
 			break;
 		}
 		case 0x0F:
@@ -162,6 +175,9 @@ int EmuCPU::step(void)
 		{
 			instruction = "LD DE, d16";
 			cycles += LOAD16(&regs.cpu.de, &regs.cpu.pc);
+
+			instruction = fmt::format("LD DE, 0x{:04X}", regs.cpu.de);
+
 			break;
 		}
 		case 0x12:
@@ -192,6 +208,9 @@ int EmuCPU::step(void)
 		{
 			instruction = "LD D, d8";
 			cycles += LOAD8(&regs.cpu.d, &regs.cpu.pc);
+
+			instruction = fmt::format("LD D, 0x{:02X}", regs.cpu.d);
+
 			break;
 		}
 		case 0x17:
@@ -205,7 +224,11 @@ int EmuCPU::step(void)
 			instruction = "JR s8";
 			uint8_t relative_address;
 			cycles += LOAD8(&relative_address, &regs.cpu.pc);
-			cycles += JUMPR(&relative_address);
+			cycles += JUMPR(&relative_address, nullptr);
+
+			// Use C-Style cast because it's a pain in the ass to do it right.
+			instruction = fmt::format("JR ${:02X}", (int8_t)relative_address);
+
 			break;
 		}
 		case 0x19:
@@ -242,12 +265,133 @@ int EmuCPU::step(void)
 		{
 			instruction = "LD E, d8";
 			cycles += LOAD8(&regs.cpu.e, &regs.cpu.pc);
+
+			instruction = fmt::format("LD E, 0x{:02X}", regs.cpu.e);
+
 			break;
 		}
 		case 0x1F:
 		{
 			instruction = "RRA";
 			cycles += RR(&regs.cpu.a);
+			break;
+		}
+		case 0x20:
+		{
+			instruction = "JR NZ s8";
+			bool not_zero = !regs.flags.zero;
+			uint8_t relative_address;
+			cycles += LOAD8(&relative_address, &regs.cpu.pc);
+			cycles += JUMPR(&relative_address, &not_zero);
+
+			instruction = fmt::format("JR NZ ${:02X}", (int8_t)relative_address);
+
+			break;
+		}
+		case 0x21:
+		{
+			instruction = "LD HL, d8";
+			cycles += LOAD16(&regs.cpu.hl, &regs.cpu.pc);
+
+			instruction = fmt::format("LD HL, 0x{:04X}", regs.cpu.hl);
+
+			break;
+		}
+		case 0x22:
+		{
+			instruction = "LD [HL+], A";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.a);
+			regs.cpu.hl++; // Simultaneous, no performance penalty.
+			break;
+		}
+		case 0x23:
+		{
+			instruction = "INC HL";
+			cycles += INC16(&regs.cpu.hl);
+			break;
+		}
+		case 0x24:
+		{
+			instruction = "INC H";
+			cycles += INC8(&regs.cpu.h);
+			break;
+		}
+		case 0x25:
+		{
+			instruction = "DEC H";
+			cycles += DEC8(&regs.cpu.h);
+			break;
+		}
+		case 0x26:
+		{
+			instruction = "LD H, d8";
+			cycles += LOAD8(&regs.cpu.h, &regs.cpu.pc);
+
+			instruction = fmt::format("LD H, 0x{:02X}", regs.cpu.h);
+
+			break;
+		}
+		case 0x27:
+		{
+			instruction = "DAA";
+			cycles += DAA();
+			break;
+		}
+		case 0x28:
+		{
+			instruction = "JR Z, s8";
+			uint8_t relative_address;
+			cycles += LOAD8(&relative_address, &regs.cpu.pc);
+			cycles += JUMPR(&relative_address, &regs.flags.zero);
+
+			instruction = fmt::format("JR Z ${:02X}", (int8_t)relative_address);
+
+			break;
+		}
+		case 0x29:
+		{
+			instruction = "ADD HL, HL";
+			cycles += ADD16(&regs.cpu.hl, &regs.cpu.hl);
+			break;
+		}
+		case 0x2A:
+		{
+			instruction = "LD A, [HL+]";
+			cycles += LOAD8(&regs.cpu.a, &regs.cpu.hl);
+			regs.cpu.hl++; // Simultaneous, no performance penalty.
+			break;
+		}
+		case 0x2B:
+		{
+			instruction = "DEC HL";
+			cycles += DEC16(&regs.cpu.hl);
+			break;
+		}
+		case 0x2C:
+		{
+			instruction = "INC L";
+			cycles += INC8(&regs.cpu.l);
+			break;
+		}
+		case 0x2D:
+		{
+			instruction = "DEC L";
+			cycles += DEC8(&regs.cpu.l);
+			break;
+		}
+		case 0x2E:
+		{
+			instruction = "LD L, d8";
+			cycles += LOAD8(&regs.cpu.l, &regs.cpu.pc);
+
+			instruction = fmt::format("LD L, 0x{:02X}", regs.cpu.l);
+
+			break;
+		}
+		case 0x2F:
+		{
+			instruction = "CPL";
+			cycles += CPL();
 			break;
 		}
 		default:
@@ -273,8 +417,8 @@ int EmuCPU::step(void)
 	}
 
 	logMessage(fmt::format(
-		"Executed instruction {}. Source: ${:04X} - Cycles: {}",
-		instruction, source, cycles
+		"Executed instruction {}. Opcode: 0x{:02X} - Source: ${:04X} - Cycles: {}",
+		instruction, opcode, source, cycles
 	),
 		LOG_DEBUG
 	);
@@ -554,8 +698,56 @@ int EmuCPU::RRC(uint8_t* target)
 
 
 
-int EmuCPU::JUMPR(uint8_t* address)
+int EmuCPU::DAA(void)
 {
+	// Taken from user AWJ @ https://forums.nesdev.org/viewtopic.php?t=15944
+	if(!regs.flags.sub)
+	{  // after an addition, adjust if (half-)carry occurred or if result is out of bounds
+		if(regs.flags.carry || regs.cpu.a > 0x99)
+		{
+			regs.cpu.a += 0x60; regs.flags.carry = true;
+		}
+		if(regs.flags.half_carry || (regs.cpu.a & 0x0f) > 0x09)
+		{
+			regs.cpu.a += 0x6;
+		}
+	} else
+	{  // after a subtraction, only adjust if (half-)carry occurred
+		if(regs.flags.carry)
+		{
+			regs.cpu.a -= 0x60;
+		}
+		if(regs.flags.half_carry)
+		{
+			regs.cpu.a -= 0x60;
+		}
+	}
+	// these flags are always updated
+	regs.flags.zero = (regs.cpu.a == 0); // the usual z flag
+	regs.flags.half_carry = false; // h flag is always cleared
+
+	return 0;
+}
+
+
+
+int EmuCPU::CPL(void)
+{
+	regs.cpu.a = ~regs.cpu.a;
+
+	return 0;
+}
+
+
+
+int EmuCPU::JUMPR(uint8_t* address, bool* condition)
+{
+	// If condition exists and is false, do not jump.
+	if(condition != nullptr && !(*condition))
+	{
+		return 0;
+	}
+
 	int8_t relative_address;
 	// Because it would be too sane to have static_cast do a bit-exact copy.
 	memcpy_s(&relative_address, 1, &address, 1);

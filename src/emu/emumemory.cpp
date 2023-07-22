@@ -130,7 +130,7 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
 	if(ignore_illegal) { return 0; }
 
 	throw std::out_of_range(fmt::format(
-		"Illegal Memory Read! Address: {}", address
+		"Illegal Memory Read! Address: ${:04X}", address
 	));
 }
 
@@ -222,7 +222,7 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
 	}
 
 	throw std::out_of_range(fmt::format(
-		"Illegal Memory Write! Address: {} - Value: {}", address, value
+		"Illegal Memory Write! Address: ${:04X} - Value: 0x{:02X}", address, value
 	));
 }
 

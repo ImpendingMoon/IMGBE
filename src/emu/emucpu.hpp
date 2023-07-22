@@ -62,7 +62,10 @@ private:
 	int RLC(uint8_t* target);
 	int RRC(uint8_t* target);
 
-	int JUMPR(uint8_t* address);
+	int DAA(void);
+	int CPL(void);
+
+	int JUMPR(uint8_t* address, bool* condition);
 
 	static inline bool willOverflow8(uint8_t a, uint8_t b)
 	{
