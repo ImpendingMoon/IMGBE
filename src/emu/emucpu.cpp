@@ -152,6 +152,104 @@ int EmuCPU::step(void)
 			cycles += RRC(&regs.cpu.a);
 			break;
 		}
+		case 0x10:
+		{
+			instruction = "STOP";
+			// TODO: Make a way for the CPU to stop the system.
+			break;
+		}
+		case 0x11:
+		{
+			instruction = "LD DE, d16";
+			cycles += LOAD16(&regs.cpu.de, &regs.cpu.pc);
+			break;
+		}
+		case 0x12:
+		{
+			instruction = "LD [DE], A";
+			cycles += STORE8(&regs.cpu.de, &regs.cpu.a);
+			break;
+		}
+		case 0x13:
+		{
+			instruction = "INC DE";
+			cycles += INC16(&regs.cpu.de);
+			break;
+		}
+		case 0x14:
+		{
+			instruction = "INC D";
+			cycles += INC8(&regs.cpu.d);
+			break;
+		}
+		case 0x15:
+		{
+			instruction = "DEC D";
+			cycles += DEC8(&regs.cpu.d);
+			break;
+		}
+		case 0x16:
+		{
+			instruction = "LD D, d8";
+			cycles += LOAD8(&regs.cpu.d, &regs.cpu.pc);
+			break;
+		}
+		case 0x17:
+		{
+			instruction = "RLA";
+			cycles += RL(&regs.cpu.a);
+			break;
+		}
+		case 0x18:
+		{
+			instruction = "JR s8";
+			uint8_t relative_address;
+			cycles += LOAD8(&relative_address, &regs.cpu.pc);
+			cycles += JUMPR(&relative_address);
+			break;
+		}
+		case 0x19:
+		{
+			instruction = "ADD HL, DE";
+			cycles += ADD16(&regs.cpu.hl, &regs.cpu.de);
+			break;
+		}
+		case 0x1A:
+		{
+			instruction = "LD A, [DE]";
+			cycles += LOAD8(&regs.cpu.a, &regs.cpu.de);
+			break;
+		}
+		case 0x1B:
+		{
+			instruction = "DEC DE";
+			cycles += DEC16(&regs.cpu.de);
+			break;
+		}
+		case 0x1C:
+		{
+			instruction = "INC E";
+			cycles += INC8(&regs.cpu.e);
+			break;
+		}
+		case 0x1D:
+		{
+			instruction = "DEC E";
+			cycles += DEC8(&regs.cpu.e);
+			break;
+		}
+		case 0x1E:
+		{
+			instruction = "LD E, d8";
+			cycles += LOAD8(&regs.cpu.e, &regs.cpu.pc);
+			break;
+		}
+		case 0x1F:
+		{
+			instruction = "RRA";
+			cycles += RR(&regs.cpu.a);
+			break;
+		}
 		default:
 		{
 			throw std::runtime_error(fmt::format(
@@ -386,6 +484,42 @@ int EmuCPU::ADD16(uint16_t* target, uint16_t* source)
 
 
 
+int EmuCPU::RL(uint8_t* target)
+{
+	uint8_t bit_7 = ((*target) >> 7) & 1;
+	uint8_t prev_carry = static_cast<int>(regs.flags.carry);
+
+	*target = (*target) << 1;
+	*target |= prev_carry;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = bit_7;
+
+	return 0;
+}
+
+
+
+int EmuCPU::RR(uint8_t* target)
+{
+	uint8_t bit_0 = (*target) & 1;
+	uint8_t prev_carry = static_cast<int>(regs.flags.carry);
+
+	*target = (*target >> 1);
+	*target |= ((prev_carry) << 7);
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = bit_0;
+
+	return 0;
+}
+
+
+
 int EmuCPU::RLC(uint8_t* target)
 {
 	uint8_t bit_7 = ((*target) >> 7) & 1;
@@ -416,5 +550,18 @@ int EmuCPU::RRC(uint8_t* target)
 	regs.flags.carry = bit_0;
 
 	return 0;
+}
+
+
+
+int EmuCPU::JUMPR(uint8_t* address)
+{
+	int8_t relative_address;
+	// Because it would be too sane to have static_cast do a bit-exact copy.
+	memcpy_s(&relative_address, 1, &address, 1);
+
+	regs.cpu.pc += relative_address;
+
+	return 4;
 }
 

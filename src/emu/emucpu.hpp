@@ -57,8 +57,12 @@ private:
 
 	int ADD16(uint16_t* target, uint16_t* source);
 
+	int RL(uint8_t* target);
+	int RR(uint8_t* target);
 	int RLC(uint8_t* target);
 	int RRC(uint8_t* target);
+
+	int JUMPR(uint8_t* address);
 
 	static inline bool willOverflow8(uint8_t a, uint8_t b)
 	{
