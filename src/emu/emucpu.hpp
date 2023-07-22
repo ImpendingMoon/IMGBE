@@ -9,13 +9,79 @@
 
 #include <cstdint>
 #include "emuregisters.hpp"
+#include "emumemory.hpp"
 
 class EmuCPU
 {
 public:
-	EmuCPU();
+	EmuCPU(EmuMemory* memory = nullptr);
 	~EmuCPU();
+
+	void setMemPtr(EmuMemory* memory);
+
+	/**
+	 * @brief Steps the CPU by one instruction
+	 * @return The number of machine cycles taken
+	 * @throws std::runtime_error on illegal or unimplemented instruction.
+	 */
+	int step(void);
 
 private:
 	RegisterSet regs;
+	EmuMemory* mem;
+
+	// Instructions return additional cycles used for memory access.
+	int MOVE8(uint8_t* target, uint8_t* source);
+	int LOAD8(uint8_t* target, uint16_t* source_address);
+	int STORE8(uint16_t* target_address, uint8_t* source);
+
+	int LOAD16(uint16_t* target, uint16_t* source_address);
+	int STORE16(uint16_t* target_address, uint16_t* source);
+
+	int PUSH(uint16_t* source);
+	int POP(uint16_t* target);
+
+	int INC8(uint8_t* target);
+	int INCSTORE8(uint16_t* target_address);
+	int INC16(uint16_t* target);
+	
+	int DEC8(uint8_t* target);
+	int DECSTORE8(uint16_t* target_address);
+	int DEC16(uint16_t* target);
+
+	int ADD16(uint16_t* target, uint16_t* source);
+
+	int RLC(uint8_t* target);
+	int RRC(uint8_t* target);
+
+	static inline bool willOverflow8(uint8_t a, uint8_t b)
+	{
+		return a > (UINT8_MAX - b);
+	}
+
+	static inline bool willUnderflow8(uint8_t a, uint8_t b)
+	{
+		return a < b;
+	}
+
+	static inline bool willHalfOverflow8(uint8_t a, uint8_t b)
+	{
+		// Add lower nibbles, check if overflowed to upper nibble.
+		return (((a & 0x0F) + (b & 0x0F)) & 0xF0) != 0;
+	}
+
+	static inline bool willHalfUnderflow8(uint8_t a, uint8_t b)
+	{
+		return (b & 0x0F) > (a & 0x0F);
+	}
+
+	static inline bool willOverflow16(uint16_t a, uint16_t b)
+	{
+		return a > (UINT16_MAX - b);
+	}
+
+	static inline bool willUnderflow16(uint16_t a, uint16_t b)
+	{
+		return a < b;
+	}
 };
