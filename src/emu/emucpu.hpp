@@ -63,7 +63,6 @@ private:
 	int RRC(uint8_t* target);
 
 	int DAA(void);
-	int CPL(void);
 
 	int JUMPR(uint8_t* address, bool* condition);
 

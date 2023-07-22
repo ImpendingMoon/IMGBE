@@ -290,7 +290,7 @@ int EmuCPU::step(void)
 		}
 		case 0x21:
 		{
-			instruction = "LD HL, d8";
+			instruction = "LD HL, d16";
 			cycles += LOAD16(&regs.cpu.hl, &regs.cpu.pc);
 
 			instruction = fmt::format("LD HL, 0x{:04X}", regs.cpu.hl);
@@ -391,7 +391,509 @@ int EmuCPU::step(void)
 		case 0x2F:
 		{
 			instruction = "CPL";
-			cycles += CPL();
+			regs.cpu.a = ~regs.cpu.a;
+			break;
+		}
+		case 0x30:
+		{
+			instruction = "JR NC, s8";
+			bool not_carry = !regs.flags.carry;
+			uint8_t relative_address;
+			cycles += LOAD8(&relative_address, &regs.cpu.pc);
+			cycles += JUMPR(&relative_address, &not_carry);
+
+			instruction = fmt::format("JR NC ${:02X}", (int8_t)relative_address);
+
+			break;
+		}
+		case 0x31:
+		{
+			instruction = "LD SP, d16";
+			cycles += LOAD16(&regs.cpu.sp, &regs.cpu.pc);
+
+			instruction = fmt::format("LD SP, 0x{:04X}", regs.cpu.sp);
+			
+			break;
+		}
+		case 0x32:
+		{
+			instruction = "LD [HL-], A";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.a);
+			regs.cpu.hl--;
+			break;
+		}
+		case 0x33:
+		{
+			instruction = "INC SP";
+			cycles += INC16(&regs.cpu.sp);
+			break;
+		}
+		case 0x34:
+		{
+			instruction = "INC [HL]";
+			cycles += INCSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x35:
+		{
+			instruction = "DEC [HL]";
+			cycles += DECSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x36:
+		{
+			instruction = "LD [HL], d8";
+			uint8_t value;
+			cycles += LOAD8(&value, &regs.cpu.pc);
+			cycles += STORE8(&regs.cpu.hl, &value);
+			break;
+		}
+		case 0x37:
+		{
+			instruction = "SCF";
+			regs.flags.carry = true;
+			break;
+		}
+		case 0x38:
+		{
+			instruction = "JR C, s8";
+
+			uint8_t relative_address;
+			cycles += LOAD8(&relative_address, &regs.cpu.pc);
+			cycles += JUMPR(&relative_address, &regs.flags.carry);
+
+			instruction = fmt::format("JR C ${:02X}", (int8_t)relative_address);
+
+			break;
+		}
+		case 0x39:
+		{
+			instruction = "ADD HL, SP";
+			cycles += ADD16(&regs.cpu.hl, &regs.cpu.sp);
+			break;
+		}
+		case 0x3A:
+		{
+			instruction = "LD A, [HL-]";
+			cycles += LOAD8(&regs.cpu.a, &regs.cpu.hl);
+			regs.cpu.hl--;
+			break;
+		}
+		case 0x3B:
+		{
+			instruction = "DEC SP";
+			cycles += DEC16(&regs.cpu.sp);
+			break;
+		}
+		case 0x3C:
+		{
+			instruction = "INC A";
+			cycles += INC8(&regs.cpu.a);
+			break;
+		}
+		case 0x3D:
+		{
+			instruction = "DEC A";
+			cycles += DEC8(&regs.cpu.a);
+			break;
+		}
+		case 0x3E:
+		{
+			instruction = "LD A, d8";
+			cycles += LOAD8(&regs.cpu.a, &regs.cpu.pc);
+
+			instruction = fmt::format("LD A, 0x{:02X}", regs.cpu.a);
+
+			break;
+		}
+		case 0x3F:
+		{
+			instruction = "CCF";
+			regs.flags.carry = !regs.flags.carry;
+			break;
+		}
+		case 0x40:
+		{
+			instruction = "LD B, B";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.b);
+			break;
+		}
+		case 0x41:
+		{
+			instruction = "LD B, C";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.c);
+			break;
+		}
+		case 0x42:
+		{
+			instruction = "LD B, D";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.d);
+			break;
+		}
+		case 0x43:
+		{
+			instruction = "LD B, E";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.e);
+			break;
+		}
+		case 0x44:
+		{
+			instruction = "LD B, H";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.h);
+			break;
+		}
+		case 0x45: // nice
+		{
+			instruction = "LD B, L";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.l);
+			break;
+		}
+		case 0x46:
+		{
+			instruction = "LD B, [HL]";
+			cycles += LOAD8(&regs.cpu.b, &regs.cpu.hl);
+			break;
+		}
+		case 0x47:
+		{
+			instruction = "LD B, A";
+			cycles += MOVE8(&regs.cpu.b, &regs.cpu.a);
+			break;
+		}
+		case 0x48:
+		{
+			instruction = "LD C, B";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.b);
+			break;
+		}
+		case 0x49:
+		{
+			instruction = "LD C, C";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.c);
+			break;
+		}
+		case 0x4A:
+		{
+			instruction = "LD C, D";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.d);
+			break;
+		}
+		case 0x4B:
+		{
+			instruction = "LD C, E";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.e);
+			break;
+		}
+		case 0x4C:
+		{
+			instruction = "LD C, H";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.h);
+			break;
+		}
+		case 0x4D:
+		{
+			instruction = "LD C, L";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.l);
+			break;
+		}
+		case 0x4E:
+		{
+			instruction = "LD C, [HL]";
+			cycles += LOAD8(&regs.cpu.c, &regs.cpu.hl);
+			break;
+		}
+		case 0x4F:
+		{
+			instruction = "LD C, A";
+			cycles += MOVE8(&regs.cpu.c, &regs.cpu.a);
+			break;
+		}
+		case 0x50:
+		{
+			instruction = "LD D, B";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.b);
+			break;
+		}
+		case 0x51:
+		{
+			instruction = "LD D, C";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.c);
+			break;
+		}
+		case 0x52:
+		{
+			instruction = "LD D, D";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.d);
+			break;
+		}
+		case 0x53:
+		{
+			instruction = "LD D, E";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.e);
+			break;
+		}
+		case 0x54:
+		{
+			instruction = "LD D, H";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.h);
+			break;
+		}
+		case 0x55:
+		{
+			instruction = "LD D, L";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.l);
+			break;
+		}
+		case 0x56:
+		{
+			instruction = "LD D, [HL]";
+			cycles += LOAD8(&regs.cpu.d, &regs.cpu.hl);
+			break;
+		}
+		case 0x57:
+		{
+			instruction = "LD D, A";
+			cycles += MOVE8(&regs.cpu.d, &regs.cpu.a);
+			break;
+		}
+		case 0x58:
+		{
+			instruction = "LD E, B";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.b);
+			break;
+		}
+		case 0x59:
+		{
+			instruction = "LD E, C";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.c);
+			break;
+		}
+		case 0x5A:
+		{
+			instruction = "LD E, D";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.d);
+			break;
+		}
+		case 0x5B:
+		{
+			instruction = "LD E, E";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.e);
+			break;
+		}
+		case 0x5C:
+		{
+			instruction = "LD E, H";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.h);
+			break;
+		}
+		case 0x5D:
+		{
+			instruction = "LD E, L";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.l);
+			break;
+		}
+		case 0x5E:
+		{
+			instruction = "LD E, [HL]";
+			cycles += LOAD8(&regs.cpu.e, &regs.cpu.hl);
+			break;
+		}
+		case 0x5F:
+		{
+			instruction = "LD E, A";
+			cycles += MOVE8(&regs.cpu.e, &regs.cpu.a);
+			break;
+		}
+		case 0x60:
+		{
+			instruction = "LD H, B";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.b);
+			break;
+		}
+		case 0x61:
+		{
+			instruction = "LD H, C";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.c);
+			break;
+		}
+		case 0x62:
+		{
+			instruction = "LD H, D";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.d);
+			break;
+		}
+		case 0x63:
+		{
+			instruction = "LD H, E";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.e);
+			break;
+		}
+		case 0x64:
+		{
+			instruction = "LD H, H";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.h);
+			break;
+		}
+		case 0x65:
+		{
+			instruction = "LD H, L";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.l);
+			break;
+		}
+		case 0x66:
+		{
+			instruction = "LD H, [HL]";
+			cycles += LOAD8(&regs.cpu.h, &regs.cpu.hl);
+			break;
+		}
+		case 0x67:
+		{
+			instruction = "LD H, A";
+			cycles += MOVE8(&regs.cpu.h, &regs.cpu.a);
+			break;
+		}
+		case 0x68:
+		{
+			instruction = "LD L, B";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.b);
+			break;
+		}
+		case 0x69: // kinda nice
+		{
+			instruction = "LD L, C";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.c);
+			break;
+		}
+		case 0x6A:
+		{
+			instruction = "LD L, D";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.d);
+			break;
+		}
+		case 0x6B:
+		{
+			instruction = "LD L, E";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.e);
+			break;
+		}
+		case 0x6C:
+		{
+			instruction = "LD L, H";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.h);
+			break;
+		}
+		case 0x6D:
+		{
+			instruction = "LD L, L";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.l);
+			break;
+		}
+		case 0x6E:
+		{
+			instruction = "LD L, [HL]";
+			cycles += LOAD8(&regs.cpu.l, &regs.cpu.hl);
+			break;
+		}
+		case 0x6F:
+		{
+			instruction = "LD L, A";
+			cycles += MOVE8(&regs.cpu.l, &regs.cpu.a);
+			break;
+		}
+		case 0x70:
+		{
+			instruction = "LD [HL], B";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.b);
+			break;
+		}
+		case 0x71:
+		{
+			instruction = "LD [HL], C";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.c);
+			break;
+		}
+		case 0x72:
+		{
+			instruction = "LD [HL], D";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.d);
+			break;
+		}
+		case 0x73:
+		{
+			instruction = "LD [HL], E";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.e);
+			break;
+		}
+		case 0x74:
+		{
+			instruction = "LD [HL], H";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.h);
+			break;
+		}
+		case 0x75:
+		{
+			instruction = "LD [HL], L";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.l);
+			break;
+		}
+		case 0x76:
+		{
+			instruction = "HALT";
+			// TODO: Halt
+			break;
+		}
+		case 0x77:
+		{
+			instruction = "LD [HL], A";
+			cycles += STORE8(&regs.cpu.hl, &regs.cpu.a);
+			break;
+		}
+		case 0x78:
+		{
+			instruction = "LD A, B";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0x79: // kinda nice
+		{
+			instruction = "LD A, C";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0x7A:
+		{
+			instruction = "LD A, D";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0x7B:
+		{
+			instruction = "LD A, E";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0x7C:
+		{
+			instruction = "LD A, H";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0x7D:
+		{
+			instruction = "LD A, L";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0x7E:
+		{
+			instruction = "LD A, [HL]";
+			cycles += LOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0x7F:
+		{
+			instruction = "LD A, A";
+			cycles += MOVE8(&regs.cpu.a, &regs.cpu.a);
 			break;
 		}
 		default:
@@ -725,15 +1227,6 @@ int EmuCPU::DAA(void)
 	// these flags are always updated
 	regs.flags.zero = (regs.cpu.a == 0); // the usual z flag
 	regs.flags.half_carry = false; // h flag is always cleared
-
-	return 0;
-}
-
-
-
-int EmuCPU::CPL(void)
-{
-	regs.cpu.a = ~regs.cpu.a;
 
 	return 0;
 }
