@@ -55,7 +55,30 @@ private:
 	int DECSTORE8(uint16_t* target_address);
 	int DEC16(uint16_t* target);
 
+	int ADD8(uint8_t* target, uint8_t* source);
+	int ADDLOAD8(uint8_t* target, uint16_t* source_address);
 	int ADD16(uint16_t* target, uint16_t* source);
+
+	int ADC8(uint8_t* target, uint8_t* source);
+	int ADCLOAD8(uint8_t* target, uint16_t* source_address);
+	
+	int SUB8(uint8_t* target, uint8_t* source);
+	int SUBLOAD8(uint8_t* target, uint16_t* source_address);
+
+	int SBC8(uint8_t* target, uint8_t* source);
+	int SBCLOAD8(uint8_t* target, uint16_t* source_address);
+
+	int AND8(uint8_t* target, uint8_t* source);
+	int ANDLOAD8(uint8_t* target, uint16_t* source_address);
+
+	int XOR8(uint8_t* target, uint8_t* source);
+	int XORLOAD8(uint8_t* target, uint16_t* source_address);
+
+	int OR8(uint8_t* target, uint8_t* source);
+	int ORLOAD8(uint8_t* target, uint16_t* source_address);
+
+	int CP8(uint8_t* target, uint8_t* source);
+	int CPLOAD8(uint8_t* target, uint16_t* source_address);
 
 	int RL(uint8_t* target);
 	int RR(uint8_t* target);

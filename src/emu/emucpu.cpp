@@ -896,6 +896,390 @@ int EmuCPU::step(void)
 			cycles += MOVE8(&regs.cpu.a, &regs.cpu.a);
 			break;
 		}
+		case 0x80:
+		{
+			instruction = "ADD A, B";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0x81:
+		{
+			instruction = "ADD A, C";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0x82:
+		{
+			instruction = "ADD A, D";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0x83:
+		{
+			instruction = "ADD A, E";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0x84:
+		{
+			instruction = "ADD A, H";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0x85:
+		{
+			instruction = "ADD A, L";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0x86:
+		{
+			instruction = "ADD A, [HL]";
+			cycles += ADDLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0x87:
+		{
+			instruction = "ADD A, A";
+			cycles += ADD8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0x88:
+		{
+			instruction = "ADC A, B";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0x89:
+		{
+			instruction = "ADC A, C";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0x8A:
+		{
+			instruction = "ADC A, D";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0x8B:
+		{
+			instruction = "ADC A, E";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0x8C:
+		{
+			instruction = "ADC A, H";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0x8D:
+		{
+			instruction = "ADC A, L";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0x8E:
+		{
+			instruction = "ADC A, [HL]";
+			cycles += ADCLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0x8F:
+		{
+			instruction = "ADC A, A";
+			cycles += ADC8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0x90:
+		{
+			instruction = "SUB A, B";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0x91:
+		{
+			instruction = "SUB A, C";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0x92:
+		{
+			instruction = "SUB A, D";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0x93:
+		{
+			instruction = "SUB A, E";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0x94:
+		{
+			instruction = "SUB A, H";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0x95:
+		{
+			instruction = "SUB A, L";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0x96:
+		{
+			instruction = "SUB A, [HL]";
+			cycles += SUBLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0x97:
+		{
+			instruction = "SUB A, A";
+			cycles += SUB8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0x98:
+		{
+			instruction = "SBC A, B";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0x99:
+		{
+			instruction = "SBC A, C";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0x9A:
+		{
+			instruction = "SBC A, D";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0x9B:
+		{
+			instruction = "SBC A, E";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0x9C:
+		{
+			instruction = "SBC A, H";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0x9D:
+		{
+			instruction = "SBC A, L";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0x9E:
+		{
+			instruction = "SBC A, [HL]";
+			cycles += SBCLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0x9F:
+		{
+			instruction = "SBC A, A";
+			cycles += SBC8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0xA0:
+		{
+			instruction = "AND A, B";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0xA1:
+		{
+			instruction = "AND A, C";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0xA2:
+		{
+			instruction = "AND A, D";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0xA3:
+		{
+			instruction = "AND A, E";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0xA4:
+		{
+			instruction = "AND A, H";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0xA5:
+		{
+			instruction = "AND A, L";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0xA6:
+		{
+			instruction = "AND A, [HL]";
+			cycles += ANDLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0xA7:
+		{
+			instruction = "AND A, A";
+			cycles += AND8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0xA8:
+		{
+			instruction = "XOR A, B";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0xA9:
+		{
+			instruction = "XOR A, C";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0xAA:
+		{
+			instruction = "XOR A, D";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0xAB:
+		{
+			instruction = "XOR A, E";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0xAC:
+		{
+			instruction = "XOR A, H";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0xAD:
+		{
+			instruction = "XOR A, L";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0xAE:
+		{
+			instruction = "XOR A, [HL]";
+			cycles += XORLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0xAF:
+		{
+			instruction = "XOR A, A";
+			cycles += XOR8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0xB0:
+		{
+			instruction = "OR A, B";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0xB1:
+		{
+			instruction = "OR A, C";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0xB2:
+		{
+			instruction = "OR A, D";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0xB3:
+		{
+			instruction = "OR A, E";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0xB4:
+		{
+			instruction = "OR A, H";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0xB5:
+		{
+			instruction = "OR A, L";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0xB6:
+		{
+			instruction = "OR A, [HL]";
+			cycles += ORLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0xB7:
+		{
+			instruction = "OR A, A";
+			cycles += OR8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
+		case 0xB8:
+		{
+			instruction = "CP A, B";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.b);
+			break;
+		}
+		case 0xB9:
+		{
+			instruction = "CP A, C";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.c);
+			break;
+		}
+		case 0xBA:
+		{
+			instruction = "CP A, D";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.d);
+			break;
+		}
+		case 0xBB:
+		{
+			instruction = "CP A, E";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.e);
+			break;
+		}
+		case 0xBC:
+		{
+			instruction = "CP A, H";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.h);
+			break;
+		}
+		case 0xBD:
+		{
+			instruction = "CP A, L";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.l);
+			break;
+		}
+		case 0xBE:
+		{
+			instruction = "CP A, [HL]";
+			cycles += CPLOAD8(&regs.cpu.a, &regs.cpu.hl);
+			break;
+		}
+		case 0xBF:
+		{
+			instruction = "CP A, A";
+			cycles += CP8(&regs.cpu.a, &regs.cpu.a);
+			break;
+		}
 		default:
 		{
 			throw std::runtime_error(fmt::format(
@@ -1121,9 +1505,256 @@ int EmuCPU::DEC16(uint16_t* target)
 
 
 
+int EmuCPU::ADD8(uint8_t* target, uint8_t* source)
+{
+	regs.flags.carry = willOverflow8(*target, *source);
+	regs.flags.half_carry = willHalfOverflow8(*target, *source);
+
+	*target += *source;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+
+	return 0;
+}
+
+
+
+int EmuCPU::ADDLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	uint8_t value = mem->readByte(*source_address);
+
+	regs.flags.carry = willOverflow8(*target, value);
+	regs.flags.half_carry = willHalfOverflow8(*target, value);
+
+	*target += value;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+
+	return 4;
+}
+
+
+
 int EmuCPU::ADD16(uint16_t* target, uint16_t* source)
 {
 	*target += *source;
+
+	return 4;
+}
+
+
+
+int EmuCPU::ADC8(uint8_t* target, uint8_t* source)
+{
+	int carry_val = static_cast<int>(regs.flags.carry);
+	regs.flags.carry = willOverflow8(*target, (*source) + carry_val);
+	regs.flags.half_carry = willHalfOverflow8(*target, (*source) + carry_val);
+
+	*target += (*source) + carry_val;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+
+	return 0;
+}
+
+
+
+int EmuCPU::ADCLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	int carry_val = static_cast<int>(regs.flags.carry);
+	uint8_t value = mem->readByte(*source_address);
+
+	regs.flags.carry = willOverflow8(*target, value + carry_val);
+	regs.flags.half_carry = willHalfOverflow8(*target, value + carry_val);
+
+	*target += value + carry_val;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+
+	return 4;
+}
+
+
+
+int EmuCPU::SUB8(uint8_t* target, uint8_t* source)
+{
+	regs.flags.carry = willUnderflow8(*target, *source);
+	regs.flags.half_carry = willHalfUnderflow8(*target, *source);
+
+	*target -= *source;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = true;
+
+	return 0;
+}
+
+
+
+int EmuCPU::SUBLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	uint8_t value = mem->readByte(*source_address);
+
+	regs.flags.carry = willUnderflow8(*target, value);
+	regs.flags.half_carry = willHalfUnderflow8(*target, value);
+
+	*target -= value;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = true;
+
+	return 4;
+}
+
+
+
+int EmuCPU::SBC8(uint8_t* target, uint8_t* source)
+{
+	int carry_val = static_cast<int>(regs.flags.carry);
+	regs.flags.carry = willUnderflow8(*target, (*source) + carry_val);
+	regs.flags.half_carry = willHalfUnderflow8(*target, (*source) + carry_val);
+
+	*target -= ((*source) + carry_val);
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = true;
+
+	return 0;
+}
+
+
+
+int EmuCPU::SBCLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	int carry_val = static_cast<int>(regs.flags.carry);
+	uint8_t value = mem->readByte(*source_address);
+
+	regs.flags.carry = willUnderflow8(*target, value + carry_val);
+	regs.flags.half_carry = willHalfUnderflow8(*target, value + carry_val);
+
+	*target -= (value + carry_val);
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = true;
+
+	return 4;
+}
+
+
+
+int EmuCPU::AND8(uint8_t* target, uint8_t* source)
+{
+	*target &= *source;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = true;
+	regs.flags.carry = false;
+
+	return 0;
+}
+
+
+
+int EmuCPU::ANDLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	uint8_t value = mem->readByte(*source_address);
+
+	*target &= value;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = true;
+	regs.flags.carry = false;
+
+	return 4;
+}
+
+
+
+int EmuCPU::XOR8(uint8_t* target, uint8_t* source)
+{
+	*target ^= *source;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = false;
+
+	return 0;
+}
+
+
+
+int EmuCPU::XORLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	uint8_t value = mem->readByte(*source_address);
+
+	*target ^= value;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = false;
+
+	return 4;
+}
+
+
+int EmuCPU::OR8(uint8_t* target, uint8_t* source)
+{
+	*target |= *source;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = false;
+
+	return 0;
+}
+
+
+
+int EmuCPU::ORLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	uint8_t value = mem->readByte(*source_address);
+
+	*target |= value;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = false;
+
+	return 4;
+}
+
+
+
+int EmuCPU::CP8(uint8_t* target, uint8_t* source)
+{
+	regs.flags.carry = willUnderflow8(*target, *source);
+	regs.flags.half_carry = willHalfUnderflow8(*target, *source);
+	regs.flags.zero = *target - *source == 0;
+	regs.flags.sub = true;
+
+	return 0;
+}
+
+
+
+int EmuCPU::CPLOAD8(uint8_t* target, uint16_t* source_address)
+{
+	uint8_t value = mem->readByte(*source_address);
+
+	regs.flags.carry = willUnderflow8(*target, value);
+	regs.flags.half_carry = willHalfUnderflow8(*target, value);
+	regs.flags.zero = *target - value == 0;
+	regs.flags.sub = true;
 
 	return 4;
 }
@@ -1250,3 +1881,4 @@ int EmuCPU::JUMPR(uint8_t* address, bool* condition)
 	return 4;
 }
 
+// Note: this file is massive.
