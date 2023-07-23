@@ -113,7 +113,6 @@ void handleEvents(void) noexcept
 		}
 
 		case SDL_KEYDOWN:
-		case SDL_KEYUP:
 		{
 			handleKeyboard(event.key);
 			break;
@@ -130,57 +129,49 @@ void handleEvents(void) noexcept
  */
 void handleKeyboard(SDL_KeyboardEvent key)
 {
-	if(key.state == SDL_PRESSED)
+	switch(key.keysym.scancode)
 	{
-		switch(key.keysym.scancode)
+	// Esc, pause/resume
+	case SDL_SCANCODE_ESCAPE:
+	{
+		if(emuSystem != nullptr)
 		{
-		// Esc, pause/resume
-		case SDL_SCANCODE_ESCAPE:
-		{
-			if(emuSystem != nullptr)
-			{
-				emuSystem->togglePause();
-			}
-			break;
+			emuSystem->togglePause();
 		}
+		break;
+	}
 
-		// F3, step instruction
-		case SDL_SCANCODE_F3:
+	// F3, step instruction
+	case SDL_SCANCODE_F3:
+	{
+		if(emuSystem != nullptr && emuSystem->isPaused())
 		{
-			if(emuSystem != nullptr && emuSystem->isPaused())
-			{
-				emuSystem->step(true);
-			}
-			break;
+			emuSystem->step(true);
 		}
+		break;
+	}
 
-		// F5, step frame
-		case SDL_SCANCODE_F5:
+	// F5, step frame
+	case SDL_SCANCODE_F5:
+	{
+		if(emuSystem != nullptr && emuSystem->isPaused())
 		{
-			if(emuSystem != nullptr && emuSystem->isPaused())
-			{
-				emuSystem->runFrame();
-			}
-			break;
+			emuSystem->resume();
+			emuSystem->runFrame();
+			emuSystem->pause();
 		}
+		break;
+	}
 
-		// F9, resume
-		case SDL_SCANCODE_F9:
+	// F9, resume
+	case SDL_SCANCODE_F9:
+	{
+		if(emuSystem != nullptr && emuSystem->isPaused())
 		{
-			if(emuSystem != nullptr && emuSystem->isPaused())
-			{
-				emuSystem->resume();
-			}
-			break;
+			emuSystem->resume();
 		}
-
-		// TEMP
-		case SDL_SCANCODE_RETURN:
-		{
-			logMessage("TEST :D", LOG_DEBUG);
-			break;
-		}
-		}
+		break;
+	}
 	}
 }
 

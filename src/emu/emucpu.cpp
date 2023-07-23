@@ -7,12 +7,15 @@
 
 #include "emucpu.hpp"
 #include <assert.h>
+#include <algorithm>
 #include <fmt/core.h>
 #include "../logger.hpp"
+#include "emusys.hpp"
 
-EmuCPU::EmuCPU(EmuMemory* memory)
+EmuCPU::EmuCPU(EmuMemory* memory, EmuSys* parent_sys)
 {
 	mem = memory;
+	sys = parent_sys;
 }
 
 EmuCPU::~EmuCPU()
@@ -22,6 +25,11 @@ EmuCPU::~EmuCPU()
 void EmuCPU::setMemPtr(EmuMemory* memory)
 {
 	mem = memory;
+}
+
+void EmuCPU::setParentSysPtr(EmuSys* parent_sys)
+{
+	sys = parent_sys;
 }
 
 
@@ -34,6 +42,7 @@ void EmuCPU::setMemPtr(EmuMemory* memory)
 int EmuCPU::step(bool log_instruction)
 {
 	assert(mem != nullptr);
+	assert(sys != nullptr);
 
 	// TODO: Handle interrupts
 
@@ -174,7 +183,7 @@ int EmuCPU::step(bool log_instruction)
 		case 0x10:
 		{
 			instruction = "STOP";
-			// TODO: Make a way for the CPU to stop the system.
+			sys->stop();
 			break;
 		}
 		case 0x11:
@@ -845,7 +854,7 @@ int EmuCPU::step(bool log_instruction)
 		case 0x76:
 		{
 			instruction = "HALT";
-			// TODO: Halt
+			sys->pause();
 			break;
 		}
 		case 0x77:
@@ -3336,7 +3345,8 @@ int EmuCPU::step(bool log_instruction)
 		}
 
 		logMessage(fmt::format(
-			"Executed instruction {}. Opcode: 0x{:04X} - Source: ${:04X} - Cycles: {}",
+			"Executed instruction {}. Opcode: 0x{:04X} - "
+			"Source: ${:04X} - Cycles : {}",
 			instruction, 0xCB00 + opcode, source, cycles
 		),
 			LOG_DEBUG
@@ -3351,6 +3361,15 @@ int EmuCPU::step(bool log_instruction)
 			"New Register State:\n" + regs.cpuToString() + "\n",
 			LOG_DEBUG
 		);
+	}
+
+	// Check if next instruction is a breakpoint
+	if(std::count(breakpoints.begin(), breakpoints.end(), regs.cpu.pc) != 0)
+	{
+		if(sys != nullptr)
+		{
+			sys->pause();
+		}
 	}
 
 	return cycles;
@@ -3386,6 +3405,38 @@ void EmuCPU::initRegs(void)
 RegisterSet* EmuCPU::getRegsPtr(void)
 {
 	return &regs;
+}
+
+
+
+/**
+ * @brief Sets a breakpoint at a given address.
+ * @param address
+ */
+void EmuCPU::setBreakpoint(uint16_t address)
+{
+	// Don't add if already exists
+	if(std::count(breakpoints.begin(), breakpoints.end(), address) != 0)
+	{
+		return;
+	}
+
+	breakpoints.push_back(address);
+}
+
+
+
+/**
+ * @brief Clears a breakpoint at a given address, if it exists.
+ * @param address
+ */
+void EmuCPU::clearBreakpoint(uint16_t address)
+{
+	auto it = std::find(breakpoints.begin(), breakpoints.end(), address);
+
+	if(it == breakpoints.end()) { return; }
+
+	breakpoints.erase(it);
 }
 
 

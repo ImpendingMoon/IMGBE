@@ -11,13 +11,16 @@
 #include "emuregisters.hpp"
 #include "emumemory.hpp"
 
+class EmuSys;
+
 class EmuCPU
 {
 public:
-	EmuCPU(EmuMemory* memory = nullptr);
+	EmuCPU(EmuMemory* memory = nullptr, EmuSys* parent_sys = nullptr);
 	~EmuCPU();
 
 	void setMemPtr(EmuMemory* memory);
+	void setParentSysPtr(EmuSys* parent_sys);
 
 	/**
 	 * @brief Steps the CPU by one instruction
@@ -38,9 +41,24 @@ public:
 	 */
 	RegisterSet* getRegsPtr(void);
 
+	/**
+	 * @brief Sets a breakpoint at a given address.
+	 * @param address 
+	 */
+	void setBreakpoint(uint16_t address);
+
+	/**
+	 * @brief Clears a breakpoint at a given address, if it exists.
+	 * @param address 
+	 */
+	void clearBreakpoint(uint16_t address);
+
 private:
 	RegisterSet regs;
 	EmuMemory* mem;
+	EmuSys* sys;
+
+	std::vector<uint16_t> breakpoints{};
 
 	// EI and DI are delayed for one instruction.
 	bool nextInterruptState = true;

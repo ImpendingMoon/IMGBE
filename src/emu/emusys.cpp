@@ -14,7 +14,7 @@
 EmuSys::EmuSys() :
 	mem(),
 	cart(&mem),
-	cpu(&mem)
+	cpu(&mem, this)
 {
 	mem.setCPURegisters(cpu.getRegsPtr());
 	logMessage("Emulated system created.", LOG_INFO);
@@ -60,6 +60,7 @@ void EmuSys::runFrame(void)
 
 	while(cycles < cycles_per_frame)
 	{
+		if(paused) { break; } // CPU breakpoints pause in-frame
 		cycles += step(true); // TEMP: Will not log by default
 	}
 }
@@ -96,6 +97,8 @@ void EmuSys::start(void)
 	cpu.initRegs();
 
 	running = true;
+	// TEMP WHILE DEBUGGING INSTRUCTIONS
+	paused = true;
 }
 
 
@@ -138,6 +141,7 @@ void EmuSys::resume(void) noexcept
  */
 void EmuSys::stop(void) noexcept
 {
+	paused = false;
 	running = false;
 }
 
