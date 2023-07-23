@@ -45,7 +45,6 @@ void runMainLoop(void) noexcept
 			{
 				logMessage(ex.what(), LOG_DEBUG);
 			}
-			SDL_Delay(1000); // TEMP: Only while instructions are added.
 		}
 
 		windowClear();

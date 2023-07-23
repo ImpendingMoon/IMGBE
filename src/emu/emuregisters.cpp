@@ -6,6 +6,9 @@
  */
 
 #include "emuregisters.hpp"
+#include "fmt/core.h"
+
+
 
 RegisterSet::RegisterSet()
 {}
@@ -29,6 +32,21 @@ uint8_t* RegisterSet::getRegisterPtr(uint16_t address) const noexcept
 	}
 
 	return nullptr;
+}
+
+
+
+std::string RegisterSet::cpuToString(void)
+{
+	return fmt::format(
+		"A: 0x{:02X} F: 0x{:02X} B: 0x{:02X} C: 0x{:02X} "
+		"D: 0x{:02X} E: 0x{:02X} H: 0x{:02X} L: 0x{:02X}\n"
+		"PC: ${:04X} SP: ${:04X}\n"
+		"Zero: {} Sub: {} H-Carry: {} Carry: {}",
+		cpu.a, cpu.f, cpu.b, cpu.c, cpu.d, cpu.e, cpu.h, cpu.l,
+		cpu.pc, cpu.sp,
+		flags.zero, flags.sub, flags.half_carry, flags.carry
+	);
 }
 
 

@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <cstdint>
 #include <unordered_map>
 
@@ -23,6 +24,11 @@ public:
 	 * @returns a pointer to a register, or a nullptr
 	 */
 	uint8_t* getRegisterPtr(uint16_t address) const noexcept;
+
+	/**
+	 * @brief Returns a string representation of the CPU registers.
+	 */
+	std::string cpuToString(void);
 
 	/**
 	 * @brief Updates the 'f' register with the values from the flag struct.

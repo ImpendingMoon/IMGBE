@@ -39,6 +39,8 @@ int EmuCPU::step(void)
 
 	regs.mem.io.ienable = nextInterruptState;
 
+	regs.flagRegisterToStruct();
+
 	int cycles = 4;
 	uint16_t source = regs.cpu.pc;
 	bool second_bank = false;
@@ -3332,10 +3334,14 @@ int EmuCPU::step(void)
 			"Executed instruction {}. Opcode: 0x{:04X} - Source: ${:04X} - Cycles: {}",
 			instruction, 0xCB00 + opcode, source, cycles
 		),
-	LOG_DEBUG
+			LOG_DEBUG
 		);
 		}
 	}
+
+	regs.flagStructToRegister();
+
+	logMessage("New Register State:\n" + regs.cpuToString() + "\n", LOG_DEBUG);
 
 	return cycles;
 }
