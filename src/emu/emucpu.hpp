@@ -86,9 +86,28 @@ private:
 	int CPLOAD8(uint8_t* target, uint16_t* source_address);
 
 	int RL(uint8_t* target);
+	int RLSTORE8(uint16_t* target_address);
 	int RR(uint8_t* target);
+	int RRSTORE8(uint16_t* target_address);
 	int RLC(uint8_t* target);
+	int RLCSTORE8(uint16_t* target_address);
 	int RRC(uint8_t* target);
+	int RRCSTORE8(uint16_t* target_address);
+	int SLA(uint8_t* target);
+	int SLASTORE8(uint16_t* target_address);
+	int SRA(uint8_t* target);
+	int SRASTORE8(uint16_t* target_address);
+	int SRL(uint8_t* target);
+	int SRLSTORE8(uint16_t* target_address);
+	int SWAP(uint8_t* target);
+	int SWAPSTORE8(uint16_t* target_address);
+
+	int BIT(uint8_t* target, uint8_t bit);
+	int BITLOAD8(uint16_t* target_address, uint8_t bit);
+	int RES(uint8_t* target, uint8_t bit);
+	int RESSTORE8(uint16_t* target_address, uint8_t bit);
+	int SET(uint8_t* target, uint8_t bit);
+	int SETSTORE8(uint16_t* target_address, uint8_t bit);
 
 	int DAA(void);
 

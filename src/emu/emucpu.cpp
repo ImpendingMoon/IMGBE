@@ -1772,10 +1772,1554 @@ int EmuCPU::step(void)
 			));
 		}
 		}
+
+		logMessage(fmt::format(
+			"Executed instruction {}. Opcode: 0x{:02X} - Source: ${:04X} - Cycles: {}",
+			instruction, opcode, source, cycles
+		),
+			LOG_DEBUG
+		);
+
 	} else
 	{
 		switch(opcode)
 		{
+		case 0x00:
+		{
+			instruction = "RLC B";
+			cycles += RLC(&regs.cpu.b);
+			break;
+		}
+		case 0x01:
+		{
+			instruction = "RLC C";
+			cycles += RLC(&regs.cpu.c);
+			break;
+		}
+		case 0x02:
+		{
+			instruction = "RLC D";
+			cycles += RLC(&regs.cpu.d);
+			break;
+		}
+		case 0x03:
+		{
+			instruction = "RLC E";
+			cycles += RLC(&regs.cpu.e);
+			break;
+		}
+		case 0x04:
+		{
+			instruction = "RLC H";
+			cycles += RLC(&regs.cpu.d);
+			break;
+		}
+		case 0x05:
+		{
+			instruction = "RLC L";
+			cycles += RLC(&regs.cpu.e);
+			break;
+		}
+		case 0x06:
+		{
+			instruction = "RLC [HL]";
+			cycles += RLCSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x07:
+		{
+			instruction = "RLC A";
+			cycles += RLC(&regs.cpu.a);
+			break;
+		}
+		case 0x08:
+		{
+			instruction = "RRC B";
+			cycles += RRC(&regs.cpu.b);
+			break;
+		}
+		case 0x09:
+		{
+			instruction = "RRC C";
+			cycles += RRC(&regs.cpu.c);
+			break;
+		}
+		case 0x0A:
+		{
+			instruction = "RRC D";
+			cycles += RRC(&regs.cpu.d);
+			break;
+		}
+		case 0x0B:
+		{
+			instruction = "RRC E";
+			cycles += RRC(&regs.cpu.e);
+			break;
+		}
+		case 0x0C:
+		{
+			instruction = "RRC H";
+			cycles += RRC(&regs.cpu.d);
+			break;
+		}
+		case 0x0D:
+		{
+			instruction = "RRC L";
+			cycles += RRC(&regs.cpu.e);
+			break;
+		}
+		case 0x0E:
+		{
+			instruction = "RRC [HL]";
+			cycles += RRCSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x0F:
+		{
+			instruction = "RRC A";
+			cycles += RRC(&regs.cpu.a);
+			break;
+		}
+		case 0x10:
+		{
+			instruction = "RL B";
+			cycles += RL(&regs.cpu.b);
+			break;
+		}
+		case 0x11:
+		{
+			instruction = "RL C";
+			cycles += RL(&regs.cpu.c);
+			break;
+		}
+		case 0x12:
+		{
+			instruction = "RL D";
+			cycles += RL(&regs.cpu.d);
+			break;
+		}
+		case 0x13:
+		{
+			instruction = "RL E";
+			cycles += RL(&regs.cpu.e);
+			break;
+		}
+		case 0x14:
+		{
+			instruction = "RL H";
+			cycles += RL(&regs.cpu.d);
+			break;
+		}
+		case 0x15:
+		{
+			instruction = "RL L";
+			cycles += RL(&regs.cpu.e);
+			break;
+		}
+		case 0x16:
+		{
+			instruction = "RL [HL]";
+			cycles += RLSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x17:
+		{
+			instruction = "RL A";
+			cycles += RL(&regs.cpu.a);
+			break;
+		}
+		case 0x18:
+		{
+			instruction = "RR B";
+			cycles += RR(&regs.cpu.b);
+			break;
+		}
+		case 0x19:
+		{
+			instruction = "RR C";
+			cycles += RR(&regs.cpu.c);
+			break;
+		}
+		case 0x1A:
+		{
+			instruction = "RR D";
+			cycles += RR(&regs.cpu.d);
+			break;
+		}
+		case 0x1B:
+		{
+			instruction = "RR E";
+			cycles += RR(&regs.cpu.e);
+			break;
+		}
+		case 0x1C:
+		{
+			instruction = "RR H";
+			cycles += RR(&regs.cpu.d);
+			break;
+		}
+		case 0x1D:
+		{
+			instruction = "RR L";
+			cycles += RR(&regs.cpu.e);
+			break;
+		}
+		case 0x1E:
+		{
+			instruction = "RR [HL]";
+			cycles += RRSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x1F:
+		{
+			instruction = "RR A";
+			cycles += RR(&regs.cpu.a);
+			break;
+		}
+		case 0x20:
+		{
+			instruction = "SLA B";
+			cycles += SLA(&regs.cpu.b);
+			break;
+		}
+		case 0x21:
+		{
+			instruction = "SLA C";
+			cycles += SLA(&regs.cpu.c);
+			break;
+		}
+		case 0x22:
+		{
+			instruction = "SLA D";
+			cycles += SLA(&regs.cpu.d);
+			break;
+		}
+		case 0x23:
+		{
+			instruction = "SLA E";
+			cycles += SLA(&regs.cpu.e);
+			break;
+		}
+		case 0x24:
+		{
+			instruction = "SLA H";
+			cycles += SLA(&regs.cpu.d);
+			break;
+		}
+		case 0x25:
+		{
+			instruction = "SLA L";
+			cycles += SLA(&regs.cpu.e);
+			break;
+		}
+		case 0x26:
+		{
+			instruction = "SLA [HL]";
+			cycles += SLASTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x27:
+		{
+			instruction = "SLA A";
+			cycles += SLA(&regs.cpu.a);
+			break;
+		}
+		case 0x28:
+		{
+			instruction = "SRA B";
+			cycles += SRA(&regs.cpu.b);
+			break;
+		}
+		case 0x29:
+		{
+			instruction = "SRA C";
+			cycles += SRA(&regs.cpu.c);
+			break;
+		}
+		case 0x2A:
+		{
+			instruction = "SRA D";
+			cycles += SRA(&regs.cpu.d);
+			break;
+		}
+		case 0x2B:
+		{
+			instruction = "SRA E";
+			cycles += SRA(&regs.cpu.e);
+			break;
+		}
+		case 0x2C:
+		{
+			instruction = "SRA H";
+			cycles += SRA(&regs.cpu.d);
+			break;
+		}
+		case 0x2D:
+		{
+			instruction = "SRA L";
+			cycles += SRA(&regs.cpu.e);
+			break;
+		}
+		case 0x2E:
+		{
+			instruction = "SRA [HL]";
+			cycles += SRASTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x2F:
+		{
+			instruction = "SRA A";
+			cycles += SRA(&regs.cpu.a);
+			break;
+		}
+		case 0x30:
+		{
+			instruction = "SWAP B";
+			cycles += SWAP(&regs.cpu.b);
+			break;
+		}
+		case 0x31:
+		{
+			instruction = "SWAP C";
+			cycles += SWAP(&regs.cpu.c);
+			break;
+		}
+		case 0x32:
+		{
+			instruction = "SWAP D";
+			cycles += SWAP(&regs.cpu.d);
+			break;
+		}
+		case 0x33:
+		{
+			instruction = "SWAP E";
+			cycles += SWAP(&regs.cpu.e);
+			break;
+		}
+		case 0x34:
+		{
+			instruction = "SWAP H";
+			cycles += SWAP(&regs.cpu.d);
+			break;
+		}
+		case 0x35:
+		{
+			instruction = "SWAP L";
+			cycles += SWAP(&regs.cpu.e);
+			break;
+		}
+		case 0x36:
+		{
+			instruction = "SWAP [HL]";
+			cycles += SWAPSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x37:
+		{
+			instruction = "SWAP A";
+			cycles += SWAP(&regs.cpu.a);
+			break;
+		}
+		case 0x38:
+		{
+			instruction = "SRL B";
+			cycles += SRL(&regs.cpu.b);
+			break;
+		}
+		case 0x39:
+		{
+			instruction = "SRL C";
+			cycles += SRL(&regs.cpu.c);
+			break;
+		}
+		case 0x3A:
+		{
+			instruction = "SRL D";
+			cycles += SRL(&regs.cpu.d);
+			break;
+		}
+		case 0x3B:
+		{
+			instruction = "SRL E";
+			cycles += SRL(&regs.cpu.e);
+			break;
+		}
+		case 0x3C:
+		{
+			instruction = "SRL H";
+			cycles += SRL(&regs.cpu.d);
+			break;
+		}
+		case 0x3D:
+		{
+			instruction = "SRL L";
+			cycles += SRL(&regs.cpu.e);
+			break;
+		}
+		case 0x3E:
+		{
+			instruction = "SRL [HL]";
+			cycles += SRLSTORE8(&regs.cpu.hl);
+			break;
+		}
+		case 0x3F:
+		{
+			instruction = "SRL A";
+			cycles += SRL(&regs.cpu.a);
+			break;
+		}
+		case 0x40:
+		{
+			instruction = "BIT 0, B";
+			cycles += BIT(&regs.cpu.b, 0);
+			break;
+		}
+		case 0x41:
+		{
+			instruction = "BIT 0, C";
+			cycles += BIT(&regs.cpu.c, 0);
+			break;
+		}
+		case 0x42:
+		{
+			instruction = "BIT 0, D";
+			cycles += BIT(&regs.cpu.d, 0);
+			break;
+		}
+		case 0x43:
+		{
+			instruction = "BIT 0, E";
+			cycles += BIT(&regs.cpu.e, 0);
+			break;
+		}
+		case 0x44:
+		{
+			instruction = "BIT 0, H";
+			cycles += BIT(&regs.cpu.h, 0);
+			break;
+		}
+		case 0x45:
+		{
+			instruction = "BIT 0, L";
+			cycles += BIT(&regs.cpu.l, 0);
+			break;
+		}
+		case 0x46:
+		{
+			instruction = "BIT 0, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 0);
+			break;
+		}
+		case 0x47:
+		{
+			instruction = "BIT 0, A";
+			cycles += BIT(&regs.cpu.a, 0);
+			break;
+		}
+		case 0x48:
+		{
+			instruction = "BIT 1, B";
+			cycles += BIT(&regs.cpu.b, 1);
+			break;
+		}
+		case 0x49:
+		{
+			instruction = "BIT 1, C";
+			cycles += BIT(&regs.cpu.c, 1);
+			break;
+		}
+		case 0x4A:
+		{
+			instruction = "BIT 1, D";
+			cycles += BIT(&regs.cpu.d, 1);
+			break;
+		}
+		case 0x4B:
+		{
+			instruction = "BIT 1, E";
+			cycles += BIT(&regs.cpu.e, 1);
+			break;
+		}
+		case 0x4C:
+		{
+			instruction = "BIT 1, H";
+			cycles += BIT(&regs.cpu.h, 1);
+			break;
+		}
+		case 0x4D:
+		{
+			instruction = "BIT 1, L";
+			cycles += BIT(&regs.cpu.l, 1);
+			break;
+		}
+		case 0x4E:
+		{
+			instruction = "BIT 1, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 1);
+			break;
+		}
+		case 0x4F:
+		{
+			instruction = "BIT 1, A";
+			cycles += BIT(&regs.cpu.a, 1);
+			break;
+		}
+		case 0x50:
+		{
+			instruction = "BIT 2, B";
+			cycles += BIT(&regs.cpu.b, 2);
+			break;
+		}
+		case 0x51:
+		{
+			instruction = "BIT 2, C";
+			cycles += BIT(&regs.cpu.c, 2);
+			break;
+		}
+		case 0x52:
+		{
+			instruction = "BIT 2, D";
+			cycles += BIT(&regs.cpu.d, 2);
+			break;
+		}
+		case 0x53:
+		{
+			instruction = "BIT 2, E";
+			cycles += BIT(&regs.cpu.e, 2);
+			break;
+		}
+		case 0x54:
+		{
+			instruction = "BIT 2, H";
+			cycles += BIT(&regs.cpu.h, 2);
+			break;
+		}
+		case 0x55:
+		{
+			instruction = "BIT 2, L";
+			cycles += BIT(&regs.cpu.l, 2);
+			break;
+		}
+		case 0x56:
+		{
+			instruction = "BIT 2, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 2);
+			break;
+		}
+		case 0x57:
+		{
+			instruction = "BIT 2, A";
+			cycles += BIT(&regs.cpu.a, 2);
+			break;
+		}
+		case 0x58:
+		{
+			instruction = "BIT 3, B";
+			cycles += BIT(&regs.cpu.b, 3);
+			break;
+		}
+		case 0x59:
+		{
+			instruction = "BIT 3, C";
+			cycles += BIT(&regs.cpu.c, 3);
+			break;
+		}
+		case 0x5A:
+		{
+			instruction = "BIT 3, D";
+			cycles += BIT(&regs.cpu.d, 3);
+			break;
+		}
+		case 0x5B:
+		{
+			instruction = "BIT 3, E";
+			cycles += BIT(&regs.cpu.e, 3);
+			break;
+		}
+		case 0x5C:
+		{
+			instruction = "BIT 3, H";
+			cycles += BIT(&regs.cpu.h, 3);
+			break;
+		}
+		case 0x5D:
+		{
+			instruction = "BIT 3, L";
+			cycles += BIT(&regs.cpu.l, 3);
+			break;
+		}
+		case 0x5E:
+		{
+			instruction = "BIT 3, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 3);
+			break;
+		}
+		case 0x5F:
+		{
+			instruction = "BIT 3, A";
+			cycles += BIT(&regs.cpu.a, 3);
+			break;
+		}
+		case 0x60:
+		{
+			instruction = "BIT 4, B";
+			cycles += BIT(&regs.cpu.b, 4);
+			break;
+		}
+		case 0x61:
+		{
+			instruction = "BIT 4, C";
+			cycles += BIT(&regs.cpu.c, 4);
+			break;
+		}
+		case 0x62:
+		{
+			instruction = "BIT 4, D";
+			cycles += BIT(&regs.cpu.d, 4);
+			break;
+		}
+		case 0x63:
+		{
+			instruction = "BIT 4, E";
+			cycles += BIT(&regs.cpu.e, 4);
+			break;
+		}
+		case 0x64:
+		{
+			instruction = "BIT 4, H";
+			cycles += BIT(&regs.cpu.h, 4);
+			break;
+		}
+		case 0x65:
+		{
+			instruction = "BIT 4, L";
+			cycles += BIT(&regs.cpu.l, 4);
+			break;
+		}
+		case 0x66:
+		{
+			instruction = "BIT 4, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 4);
+			break;
+		}
+		case 0x67:
+		{
+			instruction = "BIT 4, A";
+			cycles += BIT(&regs.cpu.a, 4);
+			break;
+		}
+		case 0x68:
+		{
+			instruction = "BIT 5, B";
+			cycles += BIT(&regs.cpu.b, 5);
+			break;
+		}
+		case 0x69:
+		{
+			instruction = "BIT 5, C";
+			cycles += BIT(&regs.cpu.c, 5);
+			break;
+		}
+		case 0x6A:
+		{
+			instruction = "BIT 5, D";
+			cycles += BIT(&regs.cpu.d, 5);
+			break;
+		}
+		case 0x6B:
+		{
+			instruction = "BIT 5, E";
+			cycles += BIT(&regs.cpu.e, 5);
+			break;
+		}
+		case 0x6C:
+		{
+			instruction = "BIT 5, H";
+			cycles += BIT(&regs.cpu.h, 5);
+			break;
+		}
+		case 0x6D:
+		{
+			instruction = "BIT 5, L";
+			cycles += BIT(&regs.cpu.l, 5);
+			break;
+		}
+		case 0x6E:
+		{
+			instruction = "BIT 5, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 5);
+			break;
+		}
+		case 0x6F:
+		{
+			instruction = "BIT 5, A";
+			cycles += BIT(&regs.cpu.a, 5);
+			break;
+		}
+		case 0x70:
+		{
+			instruction = "BIT 6, B";
+			cycles += BIT(&regs.cpu.b, 6);
+			break;
+		}
+		case 0x71:
+		{
+			instruction = "BIT 6, C";
+			cycles += BIT(&regs.cpu.c, 6);
+			break;
+		}
+		case 0x72:
+		{
+			instruction = "BIT 6, D";
+			cycles += BIT(&regs.cpu.d, 6);
+			break;
+		}
+		case 0x73:
+		{
+			instruction = "BIT 6, E";
+			cycles += BIT(&regs.cpu.e, 6);
+			break;
+		}
+		case 0x74:
+		{
+			instruction = "BIT 6, H";
+			cycles += BIT(&regs.cpu.h, 6);
+			break;
+		}
+		case 0x75:
+		{
+			instruction = "BIT 6, L";
+			cycles += BIT(&regs.cpu.l, 6);
+			break;
+		}
+		case 0x76:
+		{
+			instruction = "BIT 6, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 6);
+			break;
+		}
+		case 0x77:
+		{
+			instruction = "BIT 6, A";
+			cycles += BIT(&regs.cpu.a, 6);
+			break;
+		}
+		case 0x78:
+		{
+			instruction = "BIT 7, B";
+			cycles += BIT(&regs.cpu.b, 7);
+			break;
+		}
+		case 0x79:
+		{
+			instruction = "BIT 7, C";
+			cycles += BIT(&regs.cpu.c, 7);
+			break;
+		}
+		case 0x7A:
+		{
+			instruction = "BIT 7, D";
+			cycles += BIT(&regs.cpu.d, 7);
+			break;
+		}
+		case 0x7B:
+		{
+			instruction = "BIT 7, E";
+			cycles += BIT(&regs.cpu.e, 7);
+			break;
+		}
+		case 0x7C:
+		{
+			instruction = "BIT 7, H";
+			cycles += BIT(&regs.cpu.h, 7);
+			break;
+		}
+		case 0x7D:
+		{
+			instruction = "BIT 7, L";
+			cycles += BIT(&regs.cpu.l, 7);
+			break;
+		}
+		case 0x7E:
+		{
+			instruction = "BIT 7, [HL]";
+			cycles += BITLOAD8(&regs.cpu.hl, 7);
+			break;
+		}
+		case 0x7F:
+		{
+			instruction = "BIT 7, A";
+			cycles += BIT(&regs.cpu.a, 7);
+			break;
+		}
+		case 0x80:
+		{
+			instruction = "RES 0, B";
+			cycles += RES(&regs.cpu.b, 0);
+			break;
+		}
+		case 0x81:
+		{
+			instruction = "RES 0, C";
+			cycles += RES(&regs.cpu.c, 0);
+			break;
+		}
+		case 0x82:
+		{
+			instruction = "RES 0, D";
+			cycles += RES(&regs.cpu.d, 0);
+			break;
+		}
+		case 0x83:
+		{
+			instruction = "RES 0, E";
+			cycles += RES(&regs.cpu.e, 0);
+			break;
+		}
+		case 0x84:
+		{
+			instruction = "RES 0, H";
+			cycles += RES(&regs.cpu.h, 0);
+			break;
+		}
+		case 0x85:
+		{
+			instruction = "RES 0, L";
+			cycles += RES(&regs.cpu.l, 0);
+			break;
+		}
+		case 0x86:
+		{
+			instruction = "RES 0, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 0);
+			break;
+		}
+		case 0x87:
+		{
+			instruction = "RES 0, A";
+			cycles += RES(&regs.cpu.a, 0);
+			break;
+		}
+		case 0x88:
+		{
+			instruction = "RES 1, B";
+			cycles += RES(&regs.cpu.b, 1);
+			break;
+		}
+		case 0x89:
+		{
+			instruction = "RES 1, C";
+			cycles += RES(&regs.cpu.c, 1);
+			break;
+		}
+		case 0x8A:
+		{
+			instruction = "RES 1, D";
+			cycles += RES(&regs.cpu.d, 1);
+			break;
+		}
+		case 0x8B:
+		{
+			instruction = "RES 1, E";
+			cycles += RES(&regs.cpu.e, 1);
+			break;
+		}
+		case 0x8C:
+		{
+			instruction = "RES 1, H";
+			cycles += RES(&regs.cpu.h, 1);
+			break;
+		}
+		case 0x8D:
+		{
+			instruction = "RES 1, L";
+			cycles += RES(&regs.cpu.l, 1);
+			break;
+		}
+		case 0x8E:
+		{
+			instruction = "RES 1, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 1);
+			break;
+		}
+		case 0x8F:
+		{
+			instruction = "RES 1, A";
+			cycles += RES(&regs.cpu.a, 1);
+			break;
+		}
+		case 0x90:
+		{
+			instruction = "RES 2, B";
+			cycles += RES(&regs.cpu.b, 2);
+			break;
+		}
+		case 0x91:
+		{
+			instruction = "RES 2, C";
+			cycles += RES(&regs.cpu.c, 2);
+			break;
+		}
+		case 0x92:
+		{
+			instruction = "RES 2, D";
+			cycles += RES(&regs.cpu.d, 2);
+			break;
+		}
+		case 0x93:
+		{
+			instruction = "RES 2, E";
+			cycles += RES(&regs.cpu.e, 2);
+			break;
+		}
+		case 0x94:
+		{
+			instruction = "RES 2, H";
+			cycles += RES(&regs.cpu.h, 2);
+			break;
+		}
+		case 0x95:
+		{
+			instruction = "RES 2, L";
+			cycles += RES(&regs.cpu.l, 2);
+			break;
+		}
+		case 0x96:
+		{
+			instruction = "RES 2, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 2);
+			break;
+		}
+		case 0x97:
+		{
+			instruction = "RES 2, A";
+			cycles += RES(&regs.cpu.a, 2);
+			break;
+		}
+		case 0x98:
+		{
+			instruction = "RES 3, B";
+			cycles += RES(&regs.cpu.b, 3);
+			break;
+		}
+		case 0x99:
+		{
+			instruction = "RES 3, C";
+			cycles += RES(&regs.cpu.c, 3);
+			break;
+		}
+		case 0x9A:
+		{
+			instruction = "RES 3, D";
+			cycles += RES(&regs.cpu.d, 3);
+			break;
+		}
+		case 0x9B:
+		{
+			instruction = "RES 3, E";
+			cycles += RES(&regs.cpu.e, 3);
+			break;
+		}
+		case 0x9C:
+		{
+			instruction = "RES 3, H";
+			cycles += RES(&regs.cpu.h, 3);
+			break;
+		}
+		case 0x9D:
+		{
+			instruction = "RES 3, L";
+			cycles += RES(&regs.cpu.l, 3);
+			break;
+		}
+		case 0x9E:
+		{
+			instruction = "RES 3, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 3);
+			break;
+		}
+		case 0x9F:
+		{
+			instruction = "RES 3, A";
+			cycles += RES(&regs.cpu.a, 3);
+			break;
+		}
+		case 0xA0:
+		{
+			instruction = "RES 4, B";
+			cycles += RES(&regs.cpu.b, 4);
+			break;
+		}
+		case 0xA1:
+		{
+			instruction = "RES 4, C";
+			cycles += RES(&regs.cpu.c, 4);
+			break;
+		}
+		case 0xA2:
+		{
+			instruction = "RES 4, D";
+			cycles += RES(&regs.cpu.d, 4);
+			break;
+		}
+		case 0xA3:
+		{
+			instruction = "RES 4, E";
+			cycles += RES(&regs.cpu.e, 4);
+			break;
+		}
+		case 0xA4:
+		{
+			instruction = "RES 4, H";
+			cycles += RES(&regs.cpu.h, 4);
+			break;
+		}
+		case 0xA5:
+		{
+			instruction = "RES 4, L";
+			cycles += RES(&regs.cpu.l, 4);
+			break;
+		}
+		case 0xA6:
+		{
+			instruction = "RES 4, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 4);
+			break;
+		}
+		case 0xA7:
+		{
+			instruction = "RES 4, A";
+			cycles += RES(&regs.cpu.a, 4);
+			break;
+		}
+		case 0xA8:
+		{
+			instruction = "RES 5, B";
+			cycles += RES(&regs.cpu.b, 5);
+			break;
+		}
+		case 0xA9:
+		{
+			instruction = "RES 5, C";
+			cycles += RES(&regs.cpu.c, 5);
+			break;
+		}
+		case 0xAA:
+		{
+			instruction = "RES 5, D";
+			cycles += RES(&regs.cpu.d, 5);
+			break;
+		}
+		case 0xAB:
+		{
+			instruction = "RES 5, E";
+			cycles += RES(&regs.cpu.e, 5);
+			break;
+		}
+		case 0xAC:
+		{
+			instruction = "RES 5, H";
+			cycles += RES(&regs.cpu.h, 5);
+			break;
+		}
+		case 0xAD:
+		{
+			instruction = "RES 5, L";
+			cycles += RES(&regs.cpu.l, 5);
+			break;
+		}
+		case 0xAE:
+		{
+			instruction = "RES 5, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 5);
+			break;
+		}
+		case 0xAF:
+		{
+			instruction = "RES 5, A";
+			cycles += RES(&regs.cpu.a, 5);
+			break;
+		}
+		case 0xB0:
+		{
+			instruction = "RES 6, B";
+			cycles += RES(&regs.cpu.b, 6);
+			break;
+		}
+		case 0xB1:
+		{
+			instruction = "RES 6, C";
+			cycles += RES(&regs.cpu.c, 6);
+			break;
+		}
+		case 0xB2:
+		{
+			instruction = "RES 6, D";
+			cycles += RES(&regs.cpu.d, 6);
+			break;
+		}
+		case 0xB3:
+		{
+			instruction = "RES 6, E";
+			cycles += RES(&regs.cpu.e, 6);
+			break;
+		}
+		case 0xB4:
+		{
+			instruction = "RES 6, H";
+			cycles += RES(&regs.cpu.h, 6);
+			break;
+		}
+		case 0xB5:
+		{
+			instruction = "RES 6, L";
+			cycles += RES(&regs.cpu.l, 6);
+			break;
+		}
+		case 0xB6:
+		{
+			instruction = "RES 6, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 6);
+			break;
+		}
+		case 0xB7:
+		{
+			instruction = "RES 6, A";
+			cycles += RES(&regs.cpu.a, 6);
+			break;
+		}
+		case 0xB8:
+		{
+			instruction = "RES 7, B";
+			cycles += RES(&regs.cpu.b, 7);
+			break;
+		}
+		case 0xB9:
+		{
+			instruction = "RES 7, C";
+			cycles += RES(&regs.cpu.c, 7);
+			break;
+		}
+		case 0xBA:
+		{
+			instruction = "RES 7, D";
+			cycles += RES(&regs.cpu.d, 7);
+			break;
+		}
+		case 0xBB:
+		{
+			instruction = "RES 7, E";
+			cycles += RES(&regs.cpu.e, 7);
+			break;
+		}
+		case 0xBC:
+		{
+			instruction = "RES 7, H";
+			cycles += RES(&regs.cpu.h, 7);
+			break;
+		}
+		case 0xBD:
+		{
+			instruction = "RES 7, L";
+			cycles += RES(&regs.cpu.l, 7);
+			break;
+		}
+		case 0xBE:
+		{
+			instruction = "RES 7, [HL]";
+			cycles += RESSTORE8(&regs.cpu.hl, 7);
+			break;
+		}
+		case 0xBF:
+		{
+			instruction = "RES 7, A";
+			cycles += RES(&regs.cpu.a, 7);
+			break;
+		}
+		case 0xC0:
+		{
+			instruction = "SET 0, B";
+			cycles += SET(&regs.cpu.b, 0);
+			break;
+		}
+		case 0xC1:
+		{
+			instruction = "SET 0, C";
+			cycles += SET(&regs.cpu.c, 0);
+			break;
+		}
+		case 0xC2:
+		{
+			instruction = "SET 0, D";
+			cycles += SET(&regs.cpu.d, 0);
+			break;
+		}
+		case 0xC3:
+		{
+			instruction = "SET 0, E";
+			cycles += SET(&regs.cpu.e, 0);
+			break;
+		}
+		case 0xC4:
+		{
+			instruction = "SET 0, H";
+			cycles += SET(&regs.cpu.h, 0);
+			break;
+		}
+		case 0xC5:
+		{
+			instruction = "SET 0, L";
+			cycles += SET(&regs.cpu.l, 0);
+			break;
+		}
+		case 0xC6:
+		{
+			instruction = "SET 0, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 0);
+			break;
+		}
+		case 0xC7:
+		{
+			instruction = "SET 0, A";
+			cycles += SET(&regs.cpu.a, 0);
+			break;
+		}
+		case 0xC8:
+		{
+			instruction = "SET 1, B";
+			cycles += SET(&regs.cpu.b, 1);
+			break;
+		}
+		case 0xC9:
+		{
+			instruction = "SET 1, C";
+			cycles += SET(&regs.cpu.c, 1);
+			break;
+		}
+		case 0xCA:
+		{
+			instruction = "SET 1, D";
+			cycles += SET(&regs.cpu.d, 1);
+			break;
+		}
+		case 0xCB:
+		{
+			instruction = "SET 1, E";
+			cycles += SET(&regs.cpu.e, 1);
+			break;
+		}
+		case 0xCC:
+		{
+			instruction = "SET 1, H";
+			cycles += SET(&regs.cpu.h, 1);
+			break;
+		}
+		case 0xCD:
+		{
+			instruction = "SET 1, L";
+			cycles += SET(&regs.cpu.l, 1);
+			break;
+		}
+		case 0xCE:
+		{
+			instruction = "SET 1, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 1);
+			break;
+		}
+		case 0xCF:
+		{
+			instruction = "SET 1, A";
+			cycles += SET(&regs.cpu.a, 1);
+			break;
+		}
+		case 0xD0:
+		{
+			instruction = "SET 2, B";
+			cycles += SET(&regs.cpu.b, 2);
+			break;
+		}
+		case 0xD1:
+		{
+			instruction = "SET 2, C";
+			cycles += SET(&regs.cpu.c, 2);
+			break;
+		}
+		case 0xD2:
+		{
+			instruction = "SET 2, D";
+			cycles += SET(&regs.cpu.d, 2);
+			break;
+		}
+		case 0xD3:
+		{
+			instruction = "SET 2, E";
+			cycles += SET(&regs.cpu.e, 2);
+			break;
+		}
+		case 0xD4:
+		{
+			instruction = "SET 2, H";
+			cycles += SET(&regs.cpu.h, 2);
+			break;
+		}
+		case 0xD5:
+		{
+			instruction = "SET 2, L";
+			cycles += SET(&regs.cpu.l, 2);
+			break;
+		}
+		case 0xD6:
+		{
+			instruction = "SET 2, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 2);
+			break;
+		}
+		case 0xD7:
+		{
+			instruction = "SET 2, A";
+			cycles += SET(&regs.cpu.a, 2);
+			break;
+		}
+		case 0xD8:
+		{
+			instruction = "SET 3, B";
+			cycles += SET(&regs.cpu.b, 3);
+			break;
+		}
+		case 0xD9:
+		{
+			instruction = "SET 3, C";
+			cycles += SET(&regs.cpu.c, 3);
+			break;
+		}
+		case 0xDA:
+		{
+			instruction = "SET 3, D";
+			cycles += SET(&regs.cpu.d, 3);
+			break;
+		}
+		case 0xDB:
+		{
+			instruction = "SET 3, E";
+			cycles += SET(&regs.cpu.e, 3);
+			break;
+		}
+		case 0xDC:
+		{
+			instruction = "SET 3, H";
+			cycles += SET(&regs.cpu.h, 3);
+			break;
+		}
+		case 0xDD:
+		{
+			instruction = "SET 3, L";
+			cycles += SET(&regs.cpu.l, 3);
+			break;
+		}
+		case 0xDE:
+		{
+			instruction = "SET 3, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 3);
+			break;
+		}
+		case 0xDF:
+		{
+			instruction = "SET 3, A";
+			cycles += SET(&regs.cpu.a, 3);
+			break;
+		}
+		case 0xE0:
+		{
+			instruction = "SET 4, B";
+			cycles += SET(&regs.cpu.b, 4);
+			break;
+		}
+		case 0xE1:
+		{
+			instruction = "SET 4, C";
+			cycles += SET(&regs.cpu.c, 4);
+			break;
+		}
+		case 0xE2:
+		{
+			instruction = "SET 4, D";
+			cycles += SET(&regs.cpu.d, 4);
+			break;
+		}
+		case 0xE3:
+		{
+			instruction = "SET 4, E";
+			cycles += SET(&regs.cpu.e, 4);
+			break;
+		}
+		case 0xE4:
+		{
+			instruction = "SET 4, H";
+			cycles += SET(&regs.cpu.h, 4);
+			break;
+		}
+		case 0xE5:
+		{
+			instruction = "SET 4, L";
+			cycles += SET(&regs.cpu.l, 4);
+			break;
+		}
+		case 0xE6:
+		{
+			instruction = "SET 4, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 4);
+			break;
+		}
+		case 0xE7:
+		{
+			instruction = "SET 4, A";
+			cycles += SET(&regs.cpu.a, 4);
+			break;
+		}
+		case 0xE8:
+		{
+			instruction = "SET 5, B";
+			cycles += SET(&regs.cpu.b, 5);
+			break;
+		}
+		case 0xE9:
+		{
+			instruction = "SET 5, C";
+			cycles += SET(&regs.cpu.c, 5);
+			break;
+		}
+		case 0xEA:
+		{
+			instruction = "SET 5, D";
+			cycles += SET(&regs.cpu.d, 5);
+			break;
+		}
+		case 0xEB:
+		{
+			instruction = "SET 5, E";
+			cycles += SET(&regs.cpu.e, 5);
+			break;
+		}
+		case 0xEC:
+		{
+			instruction = "SET 5, H";
+			cycles += SET(&regs.cpu.h, 5);
+			break;
+		}
+		case 0xED:
+		{
+			instruction = "SET 5, L";
+			cycles += SET(&regs.cpu.l, 5);
+			break;
+		}
+		case 0xEE:
+		{
+			instruction = "SET 5, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 5);
+			break;
+		}
+		case 0xEF:
+		{
+			instruction = "SET 5, A";
+			cycles += SET(&regs.cpu.a, 5);
+			break;
+		}
+		case 0xF0:
+		{
+			instruction = "SET 6, B";
+			cycles += SET(&regs.cpu.b, 6);
+			break;
+		}
+		case 0xF1:
+		{
+			instruction = "SET 6, C";
+			cycles += SET(&regs.cpu.c, 6);
+			break;
+		}
+		case 0xF2:
+		{
+			instruction = "SET 6, D";
+			cycles += SET(&regs.cpu.d, 6);
+			break;
+		}
+		case 0xF3:
+		{
+			instruction = "SET 6, E";
+			cycles += SET(&regs.cpu.e, 6);
+			break;
+		}
+		case 0xF4:
+		{
+			instruction = "SET 6, H";
+			cycles += SET(&regs.cpu.h, 6);
+			break;
+		}
+		case 0xF5:
+		{
+			instruction = "SET 6, L";
+			cycles += SET(&regs.cpu.l, 6);
+			break;
+		}
+		case 0xF6:
+		{
+			instruction = "SET 6, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 6);
+			break;
+		}
+		case 0xF7:
+		{
+			instruction = "SET 6, A";
+			cycles += SET(&regs.cpu.a, 6);
+			break;
+		}
+		case 0xF8:
+		{
+			instruction = "SET 7, B";
+			cycles += SET(&regs.cpu.b, 7);
+			break;
+		}
+		case 0xF9:
+		{
+			instruction = "SET 7, C";
+			cycles += SET(&regs.cpu.c, 7);
+			break;
+		}
+		case 0xFA:
+		{
+			instruction = "SET 7, D";
+			cycles += SET(&regs.cpu.d, 7);
+			break;
+		}
+		case 0xFB:
+		{
+			instruction = "SET 7, E";
+			cycles += SET(&regs.cpu.e, 7);
+			break;
+		}
+		case 0xFC:
+		{
+			instruction = "SET 7, H";
+			cycles += SET(&regs.cpu.h, 7);
+			break;
+		}
+		case 0xFD:
+		{
+			instruction = "SET 7, L";
+			cycles += SET(&regs.cpu.l, 7);
+			break;
+		}
+		case 0xFE:
+		{
+			instruction = "SET 7, [HL]";
+			cycles += SETSTORE8(&regs.cpu.hl, 7);
+			break;
+		}
+		case 0xFF:
+		{
+			instruction = "SET 7, A";
+			cycles += SET(&regs.cpu.a, 7);
+			break;
+		}
 		default:
 		{
 			throw std::runtime_error(fmt::format(
@@ -1783,15 +3327,15 @@ int EmuCPU::step(void)
 				0xCB00 + opcode, source
 			));
 		}
+
+		logMessage(fmt::format(
+			"Executed instruction {}. Opcode: 0x{:04X} - Source: ${:04X} - Cycles: {}",
+			instruction, 0xCB00 + opcode, source, cycles
+		),
+	LOG_DEBUG
+		);
 		}
 	}
-
-	logMessage(fmt::format(
-		"Executed instruction {}. Opcode: 0x{:02X} - Source: ${:04X} - Cycles: {}",
-		instruction, opcode, source, cycles
-	),
-		LOG_DEBUG
-	);
 
 	return cycles;
 }
@@ -2325,9 +3869,31 @@ int EmuCPU::RL(uint8_t* target)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = false;
 	regs.flags.half_carry = false;
-	regs.flags.carry = bit_7;
+	regs.flags.carry = static_cast<bool>(bit_7);
 
 	return 0;
+}
+
+
+
+int EmuCPU::RLSTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_7 = (value >> 7) & 1;
+	uint8_t prev_carry = static_cast<int>(regs.flags.carry);
+
+	value = value << 1;
+	value |= prev_carry;
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_7);
+
+	return 8;
 }
 
 
@@ -2343,9 +3909,31 @@ int EmuCPU::RR(uint8_t* target)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = false;
 	regs.flags.half_carry = false;
-	regs.flags.carry = bit_0;
+	regs.flags.carry = static_cast<bool>(bit_0);
 
 	return 0;
+}
+
+
+
+int EmuCPU::RRSTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_0 = value & 1;
+	uint8_t prev_carry = static_cast<int>(regs.flags.carry);
+
+	value = value >> 1;
+	value |= ((prev_carry) << 7);
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_0);
+
+	return 8;
 }
 
 
@@ -2360,9 +3948,30 @@ int EmuCPU::RLC(uint8_t* target)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = false;
 	regs.flags.half_carry = false;
-	regs.flags.carry = bit_7;
+	regs.flags.carry = static_cast<bool>(bit_7);
 
 	return 0;
+}
+
+
+
+int EmuCPU::RLCSTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_7 = (value >> 7) & 1;
+
+	value = value << 1;
+	value |= bit_7;
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_7);
+
+	return 8;
 }
 
 
@@ -2377,9 +3986,240 @@ int EmuCPU::RRC(uint8_t* target)
 	regs.flags.zero = *target == 0;
 	regs.flags.sub = false;
 	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_0);
+
+	return 0;
+}
+
+
+
+int EmuCPU::RRCSTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_0 = value & 1;
+
+	value = value >> 1;
+	value |= ((bit_0) << 7);
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_0);
+
+	return 8;
+}
+
+
+
+int EmuCPU::SLA(uint8_t* target)
+{
+	uint8_t bit_7 = ((*target) >> 7) & 1;
+
+	*target = (*target) << 1;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_7);
+
+	return 0;
+}
+
+int EmuCPU::SLASTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_7 = (value >> 7) & 1;
+
+	value = value << 1;
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_7);
+
+	return 8;
+}
+
+
+
+int EmuCPU::SRA(uint8_t* target)
+{
+	uint8_t bit_0 = (*target) & 1;
+	uint8_t bit_7 = (*target) & 0b10000000;
+
+	*target = (*target >> 1);
+	*target |= bit_7;
+	
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_0);
+
+	return 0;
+}
+
+
+
+int EmuCPU::SRASTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_0 = value & 1;
+	uint8_t bit_7 = value & 0b10000000;
+
+	value = value >> 1;
+	value |= bit_7;
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = static_cast<bool>(bit_0);
+
+	return 8;
+}
+
+
+
+int EmuCPU::SRL(uint8_t* target)
+{
+	uint8_t bit_0 = (*target) & 1;
+
+	*target = (*target >> 1);
+	*target &= 0b01111111;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
 	regs.flags.carry = bit_0;
 
 	return 0;
+}
+
+
+
+int EmuCPU::SRLSTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t bit_0 = value & 1;
+
+	value = value >> 1;
+	value &= 0b01111111;
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = bit_0;
+
+	return 8;
+}
+
+
+
+int EmuCPU::SWAP(uint8_t* target)
+{
+	uint8_t lower_nibble = (*target) & 0x0F;
+	uint8_t upper_nibble = ((*target) >> 4) & 0x0F;
+
+	*target = (lower_nibble << 4) | upper_nibble;
+
+	regs.flags.zero = *target == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = false;
+
+	return 0;
+}
+
+
+
+int EmuCPU::SWAPSTORE8(uint16_t* target_address)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	uint8_t lower_nibble = value & 0x0F;
+	uint8_t upper_nibble = (value >> 4) & 0x0F;
+
+	value = (lower_nibble << 4) | upper_nibble;
+
+	mem->writeByte(*target_address, value);
+
+	regs.flags.zero = value == 0;
+	regs.flags.sub = false;
+	regs.flags.half_carry = false;
+	regs.flags.carry = false;
+
+	return 8;
+}
+
+
+
+int EmuCPU::BIT(uint8_t* target, uint8_t bit)
+{
+	regs.flags.zero = static_cast<bool>(((*target) >> bit) & 1);
+	return 0;
+}
+
+
+
+int EmuCPU::BITLOAD8(uint16_t* target_address, uint8_t bit)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	regs.flags.zero = static_cast<bool>((value >> bit) & 1);
+	return 4;
+}
+
+
+
+int EmuCPU::RES(uint8_t* target, uint8_t bit)
+{
+	*target &= ~(1 << bit);
+	return 0;
+}
+
+
+
+int EmuCPU::RESSTORE8(uint16_t* target_address, uint8_t bit)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	value &= ~(1 << bit);
+
+	mem->writeByte(*target_address, value);
+
+	return 8;
+}
+
+
+
+int EmuCPU::SET(uint8_t* target, uint8_t bit)
+{
+	*target |= (1 << bit);
+	return 0;
+}
+
+
+
+int EmuCPU::SETSTORE8(uint16_t* target_address, uint8_t bit)
+{
+	uint8_t value = mem->readByte(*target_address);
+
+	value |= (1 << bit);
+
+	mem->writeByte(*target_address, value);
+
+	return 8;
 }
 
 
