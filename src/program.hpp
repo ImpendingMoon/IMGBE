@@ -7,7 +7,7 @@
 
 #pragma once
 
-constexpr const char* IMGBE_VERSION_STRING = "0.1.8-devel";
+constexpr const char* IMGBE_VERSION_STRING = "0.1.9-devel";
 
 #include <iostream>
 #include <filesystem>

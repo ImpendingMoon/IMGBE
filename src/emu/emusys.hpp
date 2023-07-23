@@ -47,6 +47,11 @@ public:
 	void start(void);
 
 	/**
+	 * @brief Toggles pause if the system is running.
+	 */
+	void togglePause(void) noexcept;
+
+	/**
 	 * @brief Pauses the system if it is running.
 	 */
 	void pause(void) noexcept;

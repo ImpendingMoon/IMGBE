@@ -101,6 +101,17 @@ void EmuSys::start(void)
 
 
 /**
+ * @brief Toggles pause if the system is running.
+ */
+void EmuSys::togglePause(void) noexcept
+{
+	if(!running) { return; }
+	paused = !paused;
+}
+
+
+
+/**
  * @brief Pauses the system if it is running.
  */
 void EmuSys::pause(void) noexcept

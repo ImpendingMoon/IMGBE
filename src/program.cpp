@@ -20,6 +20,7 @@ bool exitRequested = false;
 double frameRate = 60;
 
 void handleEvents(void) noexcept;
+void handleKeyboard(SDL_KeyboardEvent key);
 
 EmuSys* emuSystem = nullptr;
 
@@ -108,6 +109,76 @@ void handleEvents(void) noexcept
 		{
 			std::filesystem::path file_path = event.drop.file;
 			loadEmuSystem(file_path);
+			break;
+		}
+
+		case SDL_KEYDOWN:
+		case SDL_KEYUP:
+		{
+			handleKeyboard(event.key);
+			break;
+		}
+		}
+	}
+}
+
+
+
+/**
+ * @brief Handles a keypress
+ * @param key
+ */
+void handleKeyboard(SDL_KeyboardEvent key)
+{
+	if(key.state == SDL_PRESSED)
+	{
+		switch(key.keysym.scancode)
+		{
+		// Esc, pause/resume
+		case SDL_SCANCODE_ESCAPE:
+		{
+			if(emuSystem != nullptr)
+			{
+				emuSystem->togglePause();
+			}
+			break;
+		}
+
+		// F3, step instruction
+		case SDL_SCANCODE_F3:
+		{
+			if(emuSystem != nullptr && emuSystem->isPaused())
+			{
+				emuSystem->step(true);
+			}
+			break;
+		}
+
+		// F5, step frame
+		case SDL_SCANCODE_F5:
+		{
+			if(emuSystem != nullptr && emuSystem->isPaused())
+			{
+				emuSystem->runFrame();
+			}
+			break;
+		}
+
+		// F9, resume
+		case SDL_SCANCODE_F9:
+		{
+			if(emuSystem != nullptr && emuSystem->isPaused())
+			{
+				emuSystem->resume();
+			}
+			break;
+		}
+
+		// TEMP
+		case SDL_SCANCODE_RETURN:
+		{
+			logMessage("TEST :D", LOG_DEBUG);
+			break;
 		}
 		}
 	}
