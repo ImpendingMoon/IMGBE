@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-22
+ * @date 2023-07-23
  */
 
 #include "emucpu.hpp"
@@ -31,7 +31,7 @@ void EmuCPU::setMemPtr(EmuMemory* memory)
  * @return The number of machine cycles taken
  * @throws std::runtime_error on illegal or unimplemented instruction.
  */
-int EmuCPU::step(void)
+int EmuCPU::step(bool log_instruction)
 {
 	assert(mem != nullptr);
 
@@ -290,7 +290,7 @@ int EmuCPU::step(void)
 			cycles += LOAD8(&relative_address, &regs.cpu.pc);
 			cycles += JUMPR(&relative_address, &not_zero);
 
-			instruction = fmt::format("JR NZ ${:02X}", (int8_t)relative_address);
+			instruction = fmt::format("JR NZ {:02X}", (int8_t)relative_address);
 
 			break;
 		}
@@ -1540,13 +1540,13 @@ int EmuCPU::step(void)
 		}
 		case 0xE0:
 		{
-			instruction = "LDH [a8], A";
+			instruction = "LDH [0xFF00+a8], A";
 			uint8_t offset;
 			cycles += LOAD8(&offset, &regs.cpu.pc);
 			uint16_t absolute_address = 0xFF00 + offset;
 			cycles += STORE8(&absolute_address, &regs.cpu.a);
 
-			instruction = fmt::format("LDH [{}], A", offset);
+			instruction = fmt::format("LDH [0xFF00+{:02X}], A", offset);
 
 			break;
 		}
@@ -1652,13 +1652,13 @@ int EmuCPU::step(void)
 		}
 		case 0xF0:
 		{
-			instruction = "LDH A, [a8]";
+			instruction = "LDH A, [0xFF00+a8]";
 			uint8_t offset;
 			cycles += LOAD8(&offset, &regs.cpu.pc);
 			uint16_t absolute_address = 0xFF00 + offset;
 			cycles += LOAD8(&regs.cpu.a, &absolute_address);
 
-			instruction = fmt::format("LDH A, [{}]", offset);
+			instruction = fmt::format("LDH A, [0xFF00+{:02X}]", offset);
 
 			break;
 		}
@@ -1670,7 +1670,7 @@ int EmuCPU::step(void)
 		}
 		case 0xF2:
 		{
-			instruction = "LDH A, [c]";
+			instruction = "LDH A, [0xFF00+C]";
 			uint16_t absolute_address = 0xFF00 + regs.cpu.c;
 			cycles += LOAD8(&regs.cpu.a, &absolute_address);
 			break;
@@ -1775,12 +1775,16 @@ int EmuCPU::step(void)
 		}
 		}
 
-		logMessage(fmt::format(
-			"Executed instruction {}. Opcode: 0x{:02X} - Source: ${:04X} - Cycles: {}",
-			instruction, opcode, source, cycles
-		),
-			LOG_DEBUG
-		);
+		if(log_instruction)
+		{
+			logMessage(fmt::format(
+				"Executed instruction {}. Opcode: 0x{:02X} - "
+				"Source: ${:04X} - Cycles: {}",
+				instruction, opcode, source, cycles
+			),
+				LOG_DEBUG
+			);
+		}
 
 	} else
 	{
@@ -3341,7 +3345,13 @@ int EmuCPU::step(void)
 
 	regs.flagStructToRegister();
 
-	logMessage("New Register State:\n" + regs.cpuToString() + "\n", LOG_DEBUG);
+	if(log_instruction)
+	{
+		logMessage(
+			"New Register State:\n" + regs.cpuToString() + "\n",
+			LOG_DEBUG
+		);
+	}
 
 	return cycles;
 }
@@ -3597,10 +3607,7 @@ int EmuCPU::ADD16(uint16_t* target, uint16_t* source)
 
 int EmuCPU::ADDSIGNED16(uint16_t* target, uint8_t* source)
 {
-	int8_t signed_source;
-	memcpy_s(&signed_source, 1, source, 1);
-
-	*target += signed_source;
+	*target += (int8_t)(*source);
 
 	return 4;
 }
@@ -4286,11 +4293,7 @@ int EmuCPU::JUMPR(uint8_t* address, bool* condition)
 		return 0;
 	}
 
-	int8_t relative_address;
-	// Because it would be too sane to have static_cast do a bit-exact copy.
-	memcpy_s(&relative_address, 1, &address, 1);
-
-	regs.cpu.pc += relative_address;
+	regs.cpu.pc += (int8_t)(*address);
 
 	return 4;
 }

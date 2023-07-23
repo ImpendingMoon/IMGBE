@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's registers
  * @author ImpendingMoon
- * @date 2023-07-20
+ * @date 2023-07-23
  */
 
 #include "emuregisters.hpp"
@@ -39,12 +39,11 @@ uint8_t* RegisterSet::getRegisterPtr(uint16_t address) const noexcept
 std::string RegisterSet::cpuToString(void)
 {
 	return fmt::format(
-		"A: 0x{:02X} F: 0x{:02X} B: 0x{:02X} C: 0x{:02X} "
-		"D: 0x{:02X} E: 0x{:02X} H: 0x{:02X} L: 0x{:02X}\n"
-		"PC: ${:04X} SP: ${:04X}\n"
-		"Zero: {} Sub: {} H-Carry: {} Carry: {}",
-		cpu.a, cpu.f, cpu.b, cpu.c, cpu.d, cpu.e, cpu.h, cpu.l,
-		cpu.pc, cpu.sp,
+		"AF: 0x{:04X} BC: 0x{:04X} DE: 0x{:04X} HL: 0x{:04X}\n"
+		"SP: ${:04X} PC: ${:04X}\n"
+		"Zero: {} - Sub: {} - H-Carry: {} - Carry: {}",
+		cpu.af, cpu.bc, cpu.de, cpu.hl,
+		cpu.sp, cpu.pc,
 		flags.zero, flags.sub, flags.half_carry, flags.carry
 	);
 }

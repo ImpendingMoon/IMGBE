@@ -2,7 +2,7 @@
  * @file program.cpp
  * @brief Handles the main loop
  * @author ImpendingMoon
- * @date 2023-07-22
+ * @date 2023-07-23
  */
 
 #include "program.hpp"
@@ -40,7 +40,7 @@ void runMainLoop(void) noexcept
 		{
 			try
 			{
-				emuSystem->step();
+				emuSystem->runFrame();
 			} catch(std::exception& ex)
 			{
 				logMessage(ex.what(), LOG_DEBUG);

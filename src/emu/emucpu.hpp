@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-22
+ * @date 2023-07-23
  */
 
 #pragma once
@@ -22,9 +22,10 @@ public:
 	/**
 	 * @brief Steps the CPU by one instruction
 	 * @return The number of machine cycles taken
+	 * @param log_instruction Whether to log internal operations (slow!)
 	 * @throws std::runtime_error on illegal or unimplemented instruction.
 	 */
-	int step(void);
+	int step(bool log_instruction);
 
 	/**
 	 * @brief Initializes registers to after-BIOS defaults

@@ -2,7 +2,7 @@
  * @file emu/emusys.hpp
  * @brief Implements the main emulated system
  * @author ImpendingMoon
- * @date 2023-07-21
+ * @date 2023-07-23
  */
 
 #pragma once
@@ -27,10 +27,18 @@ public:
 	void loadROM(std::filesystem::path file_path);
 
 	/**
-	 * @brief Steps the system by one CPU instruction
+	 * @brief Runs through one frame of emulation if not paused
 	 * @throws std::runtime_error on system not running.
 	 */
-	void step(void);
+	void runFrame(void);
+
+	/**
+	 * @brief Steps the system by one CPU instruction
+	 * @throws std::runtime_error on system not running.
+	 * @param log_instruction Whether to log internal operations (slow!)
+	 * @returns Number of cycles used
+	 */
+	int step(bool log_instruction);
 
 	/**
 	 * @brief Starts the system with an opened ROM.
@@ -77,4 +85,6 @@ private:
 	EmuMemory mem;
 	EmuCartridge cart;
 	EmuCPU cpu;
+
+	int cpu_speed = 4194304;
 };

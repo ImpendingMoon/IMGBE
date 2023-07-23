@@ -2,7 +2,7 @@
  * @file emu/emusys.cpp
  * @brief Implements the main emulated system
  * @author ImpendingMoon
- * @date 2023-07-16
+ * @date 2023-07-23
  */
 
 #include "emusys.hpp"
@@ -42,17 +42,41 @@ void EmuSys::loadROM(std::filesystem::path file_path)
 
 
 /**
- * @brief Steps the system by one CPU instruction
+ * @brief Runs through one frame of emulation if not paused
  * @throws std::runtime_error on system not running.
  */
-void EmuSys::step(void)
+void EmuSys::runFrame(void)
 {
 	if(!running)
 	{
 		throw std::runtime_error("Cannot step system that is not running!");
 	}
 
-	cpu.step();
+	if(paused) { return; }
+
+	int cycles_per_frame = cpu_speed / 59.7;
+	int cycles = 0;
+
+	while(cycles < cycles_per_frame)
+	{
+		cycles += step(true); // TEMP: Will not log by default
+	}
+}
+
+
+
+/**
+ * @brief Steps the system by one CPU instruction
+ * @throws std::runtime_error on system not running.
+ */
+int EmuSys::step(bool log_instruction)
+{
+	if(!running)
+	{
+		throw std::runtime_error("Cannot step system that is not running!");
+	}
+
+	return cpu.step(log_instruction);
 }
 
 
@@ -80,6 +104,7 @@ void EmuSys::start(void)
  */
 void EmuSys::pause(void) noexcept
 {
+	if(!running) { return; }
 	paused = true;
 }
 
@@ -90,6 +115,7 @@ void EmuSys::pause(void) noexcept
  */
 void EmuSys::resume(void) noexcept
 {
+	if(!running) { return; }
 	paused = false;
 }
 
