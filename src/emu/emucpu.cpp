@@ -3333,6 +3333,7 @@ int EmuCPU::step(bool log_instruction)
 				0xCB00 + opcode, source
 			));
 		}
+		}
 
 		logMessage(fmt::format(
 			"Executed instruction {}. Opcode: 0x{:04X} - Source: ${:04X} - Cycles: {}",
@@ -3340,7 +3341,6 @@ int EmuCPU::step(bool log_instruction)
 		),
 			LOG_DEBUG
 		);
-		}
 	}
 
 	regs.flagStructToRegister();
@@ -3376,6 +3376,16 @@ void EmuCPU::initRegs(void)
 	regs.cpu.l = 0x4D;
 	regs.cpu.pc = 0x0100;
 	regs.cpu.sp = 0xFFFE;
+}
+
+
+
+/**
+ * @brief Returns a pointer to the RegisterSet
+ */
+RegisterSet* EmuCPU::getRegsPtr(void)
+{
+	return &regs;
 }
 
 

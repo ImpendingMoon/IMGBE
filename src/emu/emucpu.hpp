@@ -33,6 +33,11 @@ public:
 	 */
 	void initRegs(void);
 
+	/**
+	 * @brief Returns a pointer to the RegisterSet
+	 */
+	RegisterSet* getRegsPtr(void);
+
 private:
 	RegisterSet regs;
 	EmuMemory* mem;

@@ -2,7 +2,7 @@
  * @file emu/emumemory.cpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-07-22
+ * @date 2023-07-23
  */
 
 #include "emumemory.hpp"
@@ -10,7 +10,7 @@
 #include <fmt/core.h>
 #include "../logger.hpp"
 
-EmuMemory::EmuMemory() :
+EmuMemory::EmuMemory(RegisterSet* cpu_registers) :
 	ROM0(ROM0_START, ROM0_END, false, true),
 	ROM1(),
 	VRAM(VRAM_START, VRAM_END),
@@ -27,6 +27,8 @@ EmuMemory::EmuMemory() :
 	{
 		WRAM1.push_back(MemoryBank(WRAM1_START, WRAM1_END));
 	}
+
+	CPURegisters = cpu_registers;
 }
 
 EmuMemory::~EmuMemory()
@@ -44,6 +46,18 @@ EmuMemory::~EmuMemory()
  */
 uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
 {
+	// Check if address is a memory register
+	if(CPURegisters != nullptr)
+	{
+		uint8_t* register_ptr = CPURegisters->getRegisterPtr(address);
+		if(register_ptr != nullptr)
+		{
+			return *register_ptr;
+		}
+	}
+
+
+
 	// This could probably be done better, but this works.
 	if(address >= ROM0_START && address <= ROM0_END)
 	{
@@ -144,6 +158,19 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
  */
 void EmuMemory::writeByte(uint16_t address, uint8_t value)
 {
+	// Check if address is a memory register
+	if(CPURegisters != nullptr)
+	{
+		uint8_t* register_ptr = CPURegisters->getRegisterPtr(address);
+		if(register_ptr != nullptr)
+		{
+			*register_ptr = value;
+			return;
+		}
+	}
+
+
+
 	// Shouldn't be able to write to ROM, dingus.
 	
 	//if(address >= ROM0_START && address <= ROM0_END)
@@ -237,6 +264,17 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
 	throw std::out_of_range(fmt::format(
 		"Illegal Memory Write! Address: ${:04X} - Value: 0x{:02X}", address, value
 	));
+}
+
+
+
+/**
+ * @brief Sets the CPU registers pointer
+ * @param cpu_registers
+ */
+void EmuMemory::setCPURegisters(RegisterSet* cpu_registers)
+{
+	CPURegisters = cpu_registers;
 }
 
 

@@ -16,6 +16,7 @@ EmuSys::EmuSys() :
 	cart(&mem),
 	cpu(&mem)
 {
+	mem.setCPURegisters(cpu.getRegsPtr());
 	logMessage("Emulated system created.", LOG_INFO);
 }
 

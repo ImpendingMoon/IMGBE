@@ -2,21 +2,21 @@
  * @file emu/emumemory.hpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-07-22
+ * @date 2023-07-23
  */
 
 #pragma once
 
-#include "memorybank.hpp"
-
 #include <vector>
 #include <cstdint>
 #include <filesystem>
+#include "memorybank.hpp"
+#include "emuregisters.hpp"
 
 class EmuMemory
 {
 public:
-	EmuMemory();
+	EmuMemory(RegisterSet* cpu_registers = nullptr);
 	~EmuMemory();
 
 	/**
@@ -35,6 +35,12 @@ public:
 	 * @throws std::out_of_range if illegal address is accessed.
 	 */
 	void writeByte(uint16_t address, uint8_t value);
+
+	/**
+	 * @brief Sets the CPU registers pointer
+	 * @param cpu_registers 
+	 */
+	void setCPURegisters(RegisterSet* cpu_registers);
 
 	/**
 	 * @brief Initializes ROM0 with a set of data.
@@ -114,6 +120,8 @@ public:
 	void dumpMemory(void) const noexcept;
 
 private:
+	RegisterSet* CPURegisters = nullptr;
+
 	MemoryBank ROM0;
 
 	std::vector<MemoryBank> ROM1;
