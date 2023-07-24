@@ -146,7 +146,14 @@ void handleKeyboard(SDL_KeyboardEvent key)
 	{
 		if(emuSystem != nullptr && emuSystem->isPaused())
 		{
-			emuSystem->step(true);
+			try
+			{
+				emuSystem->step(true);
+			} catch(std::exception& ex)
+			{
+				logMessage(ex.what(), LOG_ERRORS);
+			}
+			
 		}
 		break;
 	}
@@ -156,9 +163,15 @@ void handleKeyboard(SDL_KeyboardEvent key)
 	{
 		if(emuSystem != nullptr && emuSystem->isPaused())
 		{
-			emuSystem->resume();
-			emuSystem->runFrame();
-			emuSystem->pause();
+			try
+			{
+				emuSystem->resume();
+				emuSystem->runFrame();
+				emuSystem->pause();
+			} catch(std::exception& ex)
+			{
+				logMessage(ex.what(), LOG_ERRORS);
+			}
 		}
 		break;
 	}
