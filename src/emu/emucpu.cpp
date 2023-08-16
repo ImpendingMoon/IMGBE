@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-23
+ * @date 2023-08-15
  */
 
 #include "emucpu.hpp"
@@ -44,10 +44,6 @@ int EmuCPU::step(bool log_instruction)
 	assert(mem != nullptr);
 	assert(sys != nullptr);
 
-	// TODO: Handle interrupts
-
-	regs.mem.io.ienable = nextInterruptState;
-
 	regs.flagRegisterToStruct();
 
 	int cycles = 4;
@@ -58,6 +54,74 @@ int EmuCPU::step(bool log_instruction)
 	uint8_t opcode = mem->readByte(regs.cpu.pc);
 	regs.cpu.pc++;
 
+
+
+	// Handle Interrupts
+	uint8_t interrupts = (regs.mem.io.iflag & 0b00011111) & regs.mem.io.ienable;
+	if(regs.imaster != 0 && interrupts != 0)
+	{
+		// Execute DI and NOP to immediately disable interrupts
+		regs.imaster = 0;
+		nextInterruptState = false;
+		cycles += 4;
+
+		uint16_t handler_address = 0;
+
+		// Jump to vector
+		if((interrupts & 1)) // VBlank
+		{
+			instruction = "VBlank";
+			handler_address = 0x0040;
+			regs.mem.io.iflag &= ~1;
+			cycles += CALL(&handler_address, nullptr);
+		}
+		else if((interrupts >> 1) & 1) // LCD STAT
+		{
+			instruction = "LCD STAT";
+			handler_address = 0x0048;
+			regs.mem.io.iflag &= ~(1 << 1);
+			cycles += CALL(&handler_address, nullptr);
+		}
+		else if((interrupts >> 2) & 1) // Timer
+		{
+			instruction = "Timer";
+			handler_address = 0x0050;
+			regs.mem.io.iflag &= ~(1 << 2);
+			cycles += CALL(&handler_address, nullptr);
+		}
+		else if((interrupts >> 3) & 1) // Serial
+		{
+			instruction = "Serial";
+			handler_address = 0x0058;
+			regs.mem.io.iflag &= ~(1 << 3);
+			cycles += CALL(&handler_address, nullptr);
+		}
+		else if((interrupts >> 4) & 1) // Joypad
+		{
+			instruction = "Joypad";
+			handler_address = 0x0060;
+			regs.mem.io.iflag &= ~(1 << 4);
+			cycles += CALL(&handler_address, nullptr);
+		}
+
+		logMessage(fmt::format(
+			"Serviced Interrupt {} at vector ${:04X}",
+			instruction, handler_address
+		),
+			LOG_DEBUG
+		);
+
+		logMessage(
+			"New Register State:\n" + regs.cpuToString() + "\n",
+			LOG_DEBUG
+		);
+
+		// End early
+		return cycles;
+	}
+
+	regs.imaster = nextInterruptState;
+
 	if(opcode == 0xCB)
 	{
 		second_bank = true;
@@ -65,6 +129,8 @@ int EmuCPU::step(bool log_instruction)
 		regs.cpu.pc++;
 		cycles += 4;
 	}
+
+
 
 	if(!second_bank)
 	{

@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's registers
  * @author ImpendingMoon
- * @date 2023-07-20
+ * @date 2023-08-15
  */
 
 #pragma once
@@ -130,6 +130,9 @@ public:
 		} sound{};
 
 	} mem{};
+
+	// Write-Only and used by the CPU directly.
+	uint8_t imaster = 0;
 
 	// Boolean representation of the flags register
 	struct
