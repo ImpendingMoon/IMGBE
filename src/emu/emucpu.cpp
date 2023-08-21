@@ -3410,13 +3410,17 @@ int EmuCPU::step(bool log_instruction)
 		}
 		}
 
-		logMessage(fmt::format(
-			"Executed instruction {}. Opcode: 0x{:04X} - "
-			"Source: ${:04X} - Cycles : {}",
-			instruction, 0xCB00 + opcode, source, cycles
-		),
-			LOG_DEBUG
-		);
+		if(log_instruction)
+		{
+			logMessage(fmt::format(
+				"Executed instruction {}. Opcode: 0x{:04X} - "
+				"Source: ${:04X} - Cycles : {}",
+				instruction, 0xCB00 + opcode, source, cycles
+			),
+				LOG_DEBUG
+			);
+		}
+
 	}
 
 	regs.flagStructToRegister();
