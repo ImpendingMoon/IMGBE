@@ -1,13 +1,13 @@
 /**
- * @file program.cpp
+ * @file program.hpp
  * @brief Handles the main loop
  * @author ImpendingMoon
- * @date 2023-08-15
+ * @date 2023-08-21
  */
 
 #pragma once
 
-constexpr const char* IMGBE_VERSION_STRING = "0.1.11-devel";
+constexpr const char* IMGBE_VERSION_STRING = "0.2.0-devel";
 
 #include <iostream>
 #include <filesystem>

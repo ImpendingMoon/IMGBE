@@ -2,7 +2,7 @@
  * @file emu/emumemory.cpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-07-23
+ * @date 2023-08-21
  */
 
 #include "emumemory.hpp"
@@ -169,28 +169,19 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
 		}
 	}
 
+	if(address >= ROM0_START && address <= ROM1_END)
+	{
+		// TODO: Bank switching
+		logMessage(fmt::format(
+			"Attempted write to ROM! Address: ${:04X}"
+			"- Value 0x{:02X}",
+			address, value
+		), 
+			LOG_DEBUG
+		);
 
-
-	// Shouldn't be able to write to ROM, dingus.
-	
-	//if(address >= ROM0_START && address <= ROM0_END)
-	//{
-	//	ROM0.writeByte(address, value);
-	//	return;
-	//}
-
-	//else if(address >= ROM1_START && address <= ROM1_END)
-	//{
-	//	if(ROM1Index >= ROM1BankCount || ROM1BankCount == 0)
-	//	{
-	//		throw std::out_of_range(fmt::format(
-	//			"Illegal ROM1 Bank Write! Current Bank: {} - Max Bank: {}",
-	//			ROM1Index, ROM1BankCount - 1
-	//		));
-	//	}
-	//	ROM1.at(ROM1Index).writeByte(address, value);
-	//	return;
-	//}
+		return;
+	}
 
 	if(address >= VRAM_START && address <= VRAM_END)
 	{

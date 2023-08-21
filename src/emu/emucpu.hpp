@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-07-23
+ * @date 2023-08-21
  */
 
 #pragma once
@@ -52,6 +52,12 @@ public:
 	 * @param address 
 	 */
 	void clearBreakpoint(uint16_t address);
+
+	/**
+	 * @brief Sends an interrupt at a given bit
+	 * @param bit 
+	*/
+	void sendInterrupt(uint8_t bit);
 
 private:
 	RegisterSet regs;

@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-08-15
+ * @date 2023-08-21
  */
 
 #include "emucpu.hpp"
@@ -3503,6 +3503,17 @@ void EmuCPU::clearBreakpoint(uint16_t address)
 	if(it == breakpoints.end()) { return; }
 
 	breakpoints.erase(it);
+}
+
+
+
+/**
+ * @brief Sends an interrupt at a given bit
+ * @param bit
+*/
+void EmuCPU::sendInterrupt(uint8_t bit)
+{
+	regs.mem.io.iflag |= (1 << bit);
 }
 
 

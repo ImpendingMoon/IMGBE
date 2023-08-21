@@ -2,7 +2,7 @@
  * @file emu/emusys.cpp
  * @brief Implements the main emulated system
  * @author ImpendingMoon
- * @date 2023-07-23
+ * @date 2023-08-21
  */
 
 #include "emusys.hpp"
@@ -14,7 +14,8 @@
 EmuSys::EmuSys() :
 	mem(),
 	cart(&mem),
-	cpu(&mem, this)
+	cpu(&mem, this),
+	ppu(&mem, &cpu)
 {
 	mem.setCPURegisters(cpu.getRegsPtr());
 	logMessage("Emulated system created.", LOG_INFO);
@@ -78,7 +79,9 @@ int EmuSys::step(bool log_instruction)
 		throw std::runtime_error("Cannot step system that is not running!");
 	}
 
-	return cpu.step(log_instruction);
+	int cycles = cpu.step(log_instruction);
+	ppu.step(cycles);
+	return cycles;
 }
 
 
