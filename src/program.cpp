@@ -185,6 +185,8 @@ void handleKeyboard(SDL_KeyboardEvent key)
 		}
 		break;
 	}
+
+    default: break;
 	}
 }
 

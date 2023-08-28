@@ -125,7 +125,7 @@ int EmuCPU::step(bool log_instruction)
 	if(opcode == 0xCB)
 	{
 		second_bank = true;
-		uint8_t opcode = mem->readByte(regs.cpu.pc);
+		opcode = mem->readByte(regs.cpu.pc);
 		regs.cpu.pc++;
 		cycles += 4;
 	}

@@ -56,11 +56,12 @@ void EmuSys::runFrame(void)
 
 	if(paused) { return; }
 
-	int cycles_per_frame = cpu_speed / 59.7;
+	int cycles_per_frame = static_cast<int>(cpu_speed / 59.7);
 	int cycles = 0;
 
 	while(cycles < cycles_per_frame)
 	{
+        // FIXME: This breaks frame timing
 		if(paused) { break; } // CPU breakpoints pause in-frame
 		cycles += step(true); // TEMP: Will not log by default
 	}
