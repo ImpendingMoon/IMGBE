@@ -8,7 +8,6 @@
 #include "main.hpp"
 #include <stdexcept>
 #include <filesystem>
-#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include <fmt/core.h>
 #include "logger.hpp"
@@ -19,7 +18,7 @@ void throwInvalidArgument(const std::string& argument);
 
 bool isMainInitialized = false;
 
-int main(int argc, char** argv)
+int SDL_main(int argc, char** argv)
 {
 	try
 	{
