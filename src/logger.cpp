@@ -149,14 +149,19 @@ void setLogToFile(bool value) noexcept
  */
 std::string getTimestamp(void) noexcept
 {
-	std::time_t current_time = time(nullptr);
-	std::tm local_time;
-	localtime_s(&local_time, &current_time);
+    std::time_t current_time = time(nullptr);
+    std::tm local_time;
 
-	return fmt::format(
-		"{:02d}:{:02d}:{:02d}",
-		local_time.tm_hour,
-		local_time.tm_min,
-		local_time.tm_sec
-	);
+    #ifdef _WIN32
+    localtime_s(&local_time, &current_time); // Thanks, Microsoft
+    #else
+    localtime_r(&current_time, &local_time); // For everything but Windows
+    #endif
+
+    return fmt::format(
+            "{:02d}:{:02d}:{:02d}",
+            local_time.tm_hour,
+            local_time.tm_min,
+            local_time.tm_sec
+    );
 }
