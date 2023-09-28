@@ -48,7 +48,6 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release")
         target_compile_options(
             ${PROJECT_NAME} PRIVATE
             -Wall
-            -Wpedantic
             -O3
         )
     endif()
@@ -63,7 +62,6 @@ else()
         target_compile_options(
             ${PROJECT_NAME} PRIVATE
             -Wall
-            -Wpedantic
             -O0
             -g
         )
