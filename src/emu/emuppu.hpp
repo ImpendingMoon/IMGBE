@@ -13,33 +13,33 @@
 class EmuPPU
 {
 public:
-	EmuPPU(EmuMemory* memory = nullptr, EmuCPU* cpu = nullptr);
-	virtual ~EmuPPU();
+    EmuPPU(EmuMemory* memory = nullptr, EmuCPU* cpu = nullptr);
+    virtual ~EmuPPU();
 
-	void setMemory(EmuMemory* memory);
+    void setMemory(EmuMemory* memory);
 
-	void setCPU(EmuCPU* cpu = nullptr);
+    void setCPU(EmuCPU* cpu = nullptr);
 
-	/**
-	 * @brief Steps the PPU by a given number of cycles
-	 * @param cycles
-	 * @throws std::runtime_exception when memory or CPU pointer is null
-	 */
-	void step(int cycles);
+    /**
+     * @brief Steps the PPU by a given number of cycles
+     * @param cycles
+     * @throws std::runtime_exception when memory or CPU pointer is null
+     */
+    void step(int cycles);
 
 private:
-	EmuMemory* mem;
-	EmuCPU* cpu;
+    EmuMemory* mem;
+    EmuCPU* cpu;
 
-	enum PPUStates
-	{
-		OAMSearch,
-		PixelTransfer,
-		HBlank,
-		VBlank,
-	};
+    enum PPUStates
+    {
+        OAMSearch,
+        PixelTransfer,
+        HBlank,
+        VBlank,
+    };
 
-	PPUStates state = OAMSearch;
-	int cycle = 0;
-	uint8_t lx, ly;
+    PPUStates state = OAMSearch;
+    int cycle = 0;
+    uint8_t lx, ly;
 };

@@ -21,28 +21,28 @@
  * @throws std::invalid_argument if startAddress is greater than endAddress.
  */
 MemoryBank::MemoryBank(
-		size_t start_address,
-		size_t end_address,
-		bool read_locked,
-		bool write_locked
+        size_t start_address,
+        size_t end_address,
+        bool read_locked,
+        bool write_locked
 )
 {
-	if(start_address > end_address)
-	{
-		throw std::invalid_argument(
-			"Start address cannot be greater than end address!"
-		);
-	}
+    if(start_address > end_address)
+    {
+        throw std::invalid_argument(
+            "Start address cannot be greater than end address!"
+        );
+    }
 
-	data.reserve(end_address - start_address + 1);
-	data.resize(end_address - start_address + 1);
-	std::fill(data.begin(), data.end(), 0);
+    data.reserve(end_address - start_address + 1);
+    data.resize(end_address - start_address + 1);
+    std::fill(data.begin(), data.end(), 0);
 
-	startAddress = start_address;
-	endAddress = end_address;
+    startAddress = start_address;
+    endAddress = end_address;
 
-	readLocked = read_locked;
-	writeLocked = write_locked;
+    readLocked = read_locked;
+    writeLocked = write_locked;
 }
 
 
@@ -61,16 +61,16 @@ MemoryBank::~MemoryBank()
  */
 uint8_t MemoryBank::readByte(size_t address) const
 {
-	if(address < startAddress || address > endAddress)
-	{
-		throw std::out_of_range(
-			"Cannot read memory bank out of address range!"
-		);
-	}
+    if(address < startAddress || address > endAddress)
+    {
+        throw std::out_of_range(
+            "Cannot read memory bank out of address range!"
+        );
+    }
 
-	assert(data.size() == (endAddress - startAddress + 1));
+    assert(data.size() == (endAddress - startAddress + 1));
 
-	return data.at(address - startAddress);
+    return data.at(address - startAddress);
 }
 
 
@@ -84,58 +84,58 @@ uint8_t MemoryBank::readByte(size_t address) const
  */
 void MemoryBank::writeByte(size_t address, uint8_t value)
 {
-	if(address < startAddress || address > endAddress)
-	{
-		throw std::out_of_range(
-			"Cannot write memory bank out of address range!"
-		);
-	}
+    if(address < startAddress || address > endAddress)
+    {
+        throw std::out_of_range(
+            "Cannot write memory bank out of address range!"
+        );
+    }
 
-	assert(data.size() == (endAddress - startAddress + 1));
+    assert(data.size() == (endAddress - startAddress + 1));
 
-	data.at(address - startAddress) = value;
+    data.at(address - startAddress) = value;
 }
 
 
 
 bool MemoryBank::isReadLocked(void) const noexcept
 {
-	return readLocked;
+    return readLocked;
 }
 
 
 
 bool MemoryBank::isWriteLocked(void) const noexcept
 {
-	return writeLocked;
+    return writeLocked;
 }
 
 
 
 void MemoryBank::setReadLocked(bool value) noexcept
 {
-	readLocked = value;
+    readLocked = value;
 }
 
 
 
 void MemoryBank::setWriteLocked(bool value) noexcept
 {
-	writeLocked = value;
+    writeLocked = value;
 }
 
 
 
 size_t MemoryBank::getStartAddress(void) const noexcept
 {
-	return startAddress;
+    return startAddress;
 }
 
 
 
 size_t MemoryBank::getEndAddress(void) const noexcept
 {
-	return endAddress;
+    return endAddress;
 }
 
 
@@ -147,5 +147,5 @@ size_t MemoryBank::getEndAddress(void) const noexcept
  */
 void MemoryBank::loadData(std::vector<uint8_t>& new_data)
 {
-	std::copy(new_data.begin(), new_data.end(), data.begin());
+    std::copy(new_data.begin(), new_data.end(), data.begin());
 }

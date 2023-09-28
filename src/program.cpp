@@ -29,50 +29,50 @@ EmuSys* emuSystem = nullptr;
  */
 void runMainLoop(void) noexcept
 {
-	logMessage("Starting main loop...", LOG_INFO);
+    logMessage("Starting main loop...", LOG_INFO);
 
-	while(!exitRequested)
-	{
-		uint64_t start_time = SDL_GetPerformanceCounter();
+    while(!exitRequested)
+    {
+        uint64_t start_time = SDL_GetPerformanceCounter();
 
-		handleEvents();
+        handleEvents();
 
-		if(emuSystem != nullptr && emuSystem->isRunning())
-		{
-			try
-			{
-				emuSystem->runFrame();
-			} catch(std::exception& ex)
-			{
-				logMessage(ex.what(), LOG_DEBUG);
-			}
-		}
+        if(emuSystem != nullptr && emuSystem->isRunning())
+        {
+            try
+            {
+                emuSystem->runFrame();
+            } catch(std::exception& ex)
+            {
+                logMessage(ex.what(), LOG_DEBUG);
+            }
+        }
 
-		windowClear();
-		windowUpdate();
+        windowClear();
+        windowUpdate();
 
-		uint64_t end_time = SDL_GetPerformanceCounter();
-		double seconds_elapsed =
-			(end_time - start_time)
-			/ static_cast<double>(SDL_GetPerformanceFrequency());
+        uint64_t end_time = SDL_GetPerformanceCounter();
+        double seconds_elapsed =
+            (end_time - start_time)
+            / static_cast<double>(SDL_GetPerformanceFrequency());
 
-		SDL_Delay(
-			(seconds_elapsed < (1 / frameRate))
-			?
-			static_cast<uint32_t>(
-			floor((1000 / frameRate) - seconds_elapsed))
-			:
-			0
-		);
-	}
+        SDL_Delay(
+            (seconds_elapsed < (1 / frameRate))
+            ?
+            static_cast<uint32_t>(
+            floor((1000 / frameRate) - seconds_elapsed))
+            :
+            0
+        );
+    }
 
-	if(emuSystem != nullptr)
-	{
-		emuSystem->dumpSystem();
-		delete emuSystem;
-	}
+    if(emuSystem != nullptr)
+    {
+        emuSystem->dumpSystem();
+        delete emuSystem;
+    }
 
-	logMessage("Exited main loop.", LOG_INFO);
+    logMessage("Exited main loop.", LOG_INFO);
 }
 
 
@@ -82,8 +82,8 @@ void runMainLoop(void) noexcept
  */
 void requestExit(void) noexcept
 {
-	logMessage("Main loop exit requested...", LOG_INFO);
-	exitRequested = true;
+    logMessage("Main loop exit requested...", LOG_INFO);
+    exitRequested = true;
 }
 
 
@@ -93,32 +93,32 @@ void requestExit(void) noexcept
  */
 void handleEvents(void) noexcept
 {
-	SDL_Event event;
+    SDL_Event event;
 
-	while(SDL_PollEvent(&event))
-	{
-		switch(event.type)
-		{
-		case SDL_QUIT:
-		{
-			requestExit();
-			break;
-		}
+    while(SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
+        case SDL_QUIT:
+        {
+            requestExit();
+            break;
+        }
 
-		case SDL_DROPFILE:
-		{
-			std::filesystem::path file_path = event.drop.file;
-			loadEmuSystem(file_path);
-			break;
-		}
+        case SDL_DROPFILE:
+        {
+            std::filesystem::path file_path = event.drop.file;
+            loadEmuSystem(file_path);
+            break;
+        }
 
-		case SDL_KEYDOWN:
-		{
-			handleKeyboard(event.key);
-			break;
-		}
-		}
-	}
+        case SDL_KEYDOWN:
+        {
+            handleKeyboard(event.key);
+            break;
+        }
+        }
+    }
 }
 
 
@@ -129,65 +129,65 @@ void handleEvents(void) noexcept
  */
 void handleKeyboard(SDL_KeyboardEvent key)
 {
-	switch(key.keysym.scancode)
-	{
-	// Esc, pause/resume
-	case SDL_SCANCODE_ESCAPE:
-	{
-		if(emuSystem != nullptr)
-		{
-			emuSystem->togglePause();
-		}
-		break;
-	}
+    switch(key.keysym.scancode)
+    {
+    // Esc, pause/resume
+    case SDL_SCANCODE_ESCAPE:
+    {
+        if(emuSystem != nullptr)
+        {
+            emuSystem->togglePause();
+        }
+        break;
+    }
 
-	// F3, step instruction
-	case SDL_SCANCODE_F3:
-	{
-		if(emuSystem != nullptr && emuSystem->isPaused())
-		{
-			try
-			{
-				emuSystem->step(true);
-			} catch(std::exception& ex)
-			{
-				logMessage(ex.what(), LOG_ERRORS);
-			}
-			
-		}
-		break;
-	}
+    // F3, step instruction
+    case SDL_SCANCODE_F3:
+    {
+        if(emuSystem != nullptr && emuSystem->isPaused())
+        {
+            try
+            {
+                emuSystem->step(true);
+            } catch(std::exception& ex)
+            {
+                logMessage(ex.what(), LOG_ERRORS);
+            }
+            
+        }
+        break;
+    }
 
-	// F5, step frame
-	case SDL_SCANCODE_F5:
-	{
-		if(emuSystem != nullptr && emuSystem->isPaused())
-		{
-			try
-			{
-				emuSystem->resume();
-				emuSystem->runFrame();
-				emuSystem->pause();
-			} catch(std::exception& ex)
-			{
-				logMessage(ex.what(), LOG_ERRORS);
-			}
-		}
-		break;
-	}
+    // F5, step frame
+    case SDL_SCANCODE_F5:
+    {
+        if(emuSystem != nullptr && emuSystem->isPaused())
+        {
+            try
+            {
+                emuSystem->resume();
+                emuSystem->runFrame();
+                emuSystem->pause();
+            } catch(std::exception& ex)
+            {
+                logMessage(ex.what(), LOG_ERRORS);
+            }
+        }
+        break;
+    }
 
-	// F9, resume
-	case SDL_SCANCODE_F9:
-	{
-		if(emuSystem != nullptr && emuSystem->isPaused())
-		{
-			emuSystem->resume();
-		}
-		break;
-	}
+    // F9, resume
+    case SDL_SCANCODE_F9:
+    {
+        if(emuSystem != nullptr && emuSystem->isPaused())
+        {
+            emuSystem->resume();
+        }
+        break;
+    }
 
     default: break;
-	}
+    }
 }
 
 
@@ -200,20 +200,20 @@ void handleKeyboard(SDL_KeyboardEvent key)
  */
 std::string getKey(const std::string& pair, char delimiter)
 {
-	size_t delim_index = pair.find_first_of(delimiter);
+    size_t delim_index = pair.find_first_of(delimiter);
 
-	if(delim_index == std::string::npos)
-	{
-		std::string error_msg = fmt::format(
-			"Cannot find delimiter {} in string {}!",
-			delimiter,
-			pair
-		);
+    if(delim_index == std::string::npos)
+    {
+        std::string error_msg = fmt::format(
+            "Cannot find delimiter {} in string {}!",
+            delimiter,
+            pair
+        );
 
-		throw std::invalid_argument(error_msg);
-	}
+        throw std::invalid_argument(error_msg);
+    }
 
-	return pair.substr(0, delim_index);
+    return pair.substr(0, delim_index);
 }
 
 
@@ -226,20 +226,20 @@ std::string getKey(const std::string& pair, char delimiter)
  */
 std::string getValue(const std::string& pair, char delimiter)
 {
-	size_t delim_index = pair.find_first_of(delimiter);
+    size_t delim_index = pair.find_first_of(delimiter);
 
-	if(delim_index == std::string::npos)
-	{
-		std::string error_msg = fmt::format(
-			"Cannot find delimiter {} in string {}!",
-			delimiter,
-			pair
-		);
+    if(delim_index == std::string::npos)
+    {
+        std::string error_msg = fmt::format(
+            "Cannot find delimiter {} in string {}!",
+            delimiter,
+            pair
+        );
 
-		throw std::invalid_argument(error_msg);
-	}
+        throw std::invalid_argument(error_msg);
+    }
 
-	return pair.substr(delim_index + 1, pair.length());
+    return pair.substr(delim_index + 1, pair.length());
 }
 
 
@@ -249,7 +249,7 @@ std::string getValue(const std::string& pair, char delimiter)
  */
 void createEmuSystem(void) noexcept
 {
-	if(emuSystem == nullptr) { emuSystem = new EmuSys(); }
+    if(emuSystem == nullptr) { emuSystem = new EmuSys(); }
 }
 
 
@@ -260,27 +260,27 @@ void createEmuSystem(void) noexcept
  */
 void loadEmuSystem(const std::filesystem::path file_path) noexcept
 {
-	if(!std::filesystem::exists(file_path))
-	{
-		logMessage(
-			fmt::format("Couldn't load file {}.", file_path.string()),
-			LOG_ERRORS
-		);
-	}
+    if(!std::filesystem::exists(file_path))
+    {
+        logMessage(
+            fmt::format("Couldn't load file {}.", file_path.string()),
+            LOG_ERRORS
+        );
+    }
 
-	try
-	{
-		createEmuSystem();
-		emuSystem->stop();
-		emuSystem->loadROM(file_path);
-		emuSystem->start();
-	} catch(std::exception& ex)
-	{
-		logMessage(fmt::format(
-			"Couldn't load file {}. Error: {}",
-			file_path.string(), ex.what()
-		),
-			LOG_ERRORS
-		);
-	}
+    try
+    {
+        createEmuSystem();
+        emuSystem->stop();
+        emuSystem->loadROM(file_path);
+        emuSystem->start();
+    } catch(std::exception& ex)
+    {
+        logMessage(fmt::format(
+            "Couldn't load file {}. Error: {}",
+            file_path.string(), ex.what()
+        ),
+            LOG_ERRORS
+        );
+    }
 }

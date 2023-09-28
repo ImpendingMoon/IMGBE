@@ -12,20 +12,20 @@
 
 
 EmuSys::EmuSys() :
-	mem(),
-	cart(&mem),
-	cpu(&mem, this),
-	ppu(&mem, &cpu)
+    mem(),
+    cart(&mem),
+    cpu(&mem, this),
+    ppu(&mem, &cpu)
 {
-	mem.setCPURegisters(cpu.getRegsPtr());
-	logMessage("Emulated system created.", LOG_INFO);
+    mem.setCPURegisters(cpu.getRegsPtr());
+    logMessage("Emulated system created.", LOG_INFO);
 }
 
 
 
 EmuSys::~EmuSys()
 {
-	logMessage("Emulated system destroyed.", LOG_INFO);
+    logMessage("Emulated system destroyed.", LOG_INFO);
 }
 
 
@@ -37,8 +37,8 @@ EmuSys::~EmuSys()
  */
 void EmuSys::loadROM(std::filesystem::path file_path)
 {
-	cart.loadROM(file_path);
-	loaded = true;
+    cart.loadROM(file_path);
+    loaded = true;
 }
 
 
@@ -49,22 +49,22 @@ void EmuSys::loadROM(std::filesystem::path file_path)
  */
 void EmuSys::runFrame(void)
 {
-	if(!running)
-	{
-		throw std::runtime_error("Cannot step system that is not running!");
-	}
+    if(!running)
+    {
+        throw std::runtime_error("Cannot step system that is not running!");
+    }
 
-	if(paused) { return; }
+    if(paused) { return; }
 
-	int cycles_per_frame = static_cast<int>(cpu_speed / 59.7);
-	int cycles = 0;
+    int cycles_per_frame = static_cast<int>(cpu_speed / 59.7);
+    int cycles = 0;
 
-	while(cycles < cycles_per_frame)
-	{
+    while(cycles < cycles_per_frame)
+    {
         // FIXME: This breaks frame timing
-		if(paused) { break; } // CPU breakpoints pause in-frame
-		cycles += step(true); // TEMP: Will not log by default
-	}
+        if(paused) { break; } // CPU breakpoints pause in-frame
+        cycles += step(true); // TEMP: Will not log by default
+    }
 }
 
 
@@ -75,14 +75,14 @@ void EmuSys::runFrame(void)
  */
 int EmuSys::step(bool log_instruction)
 {
-	if(!running)
-	{
-		throw std::runtime_error("Cannot step system that is not running!");
-	}
+    if(!running)
+    {
+        throw std::runtime_error("Cannot step system that is not running!");
+    }
 
-	int cycles = cpu.step(log_instruction);
-	ppu.step(cycles);
-	return cycles;
+    int cycles = cpu.step(log_instruction);
+    ppu.step(cycles);
+    return cycles;
 }
 
 
@@ -93,16 +93,16 @@ int EmuSys::step(bool log_instruction)
  */
 void EmuSys::start(void)
 {
-	if(!loaded)
-	{
-		throw std::runtime_error("Cannot start system without loaded ROM!");
-	}
+    if(!loaded)
+    {
+        throw std::runtime_error("Cannot start system without loaded ROM!");
+    }
 
-	cpu.initRegs();
+    cpu.initRegs();
 
-	running = true;
-	// TEMP WHILE DEBUGGING INSTRUCTIONS
-	paused = true;
+    running = true;
+    // TEMP WHILE DEBUGGING INSTRUCTIONS
+    paused = true;
 }
 
 
@@ -112,8 +112,8 @@ void EmuSys::start(void)
  */
 void EmuSys::togglePause(void) noexcept
 {
-	if(!running) { return; }
-	paused = !paused;
+    if(!running) { return; }
+    paused = !paused;
 }
 
 
@@ -123,8 +123,8 @@ void EmuSys::togglePause(void) noexcept
  */
 void EmuSys::pause(void) noexcept
 {
-	if(!running) { return; }
-	paused = true;
+    if(!running) { return; }
+    paused = true;
 }
 
 
@@ -134,8 +134,8 @@ void EmuSys::pause(void) noexcept
  */
 void EmuSys::resume(void) noexcept
 {
-	if(!running) { return; }
-	paused = false;
+    if(!running) { return; }
+    paused = false;
 }
 
 
@@ -145,8 +145,8 @@ void EmuSys::resume(void) noexcept
  */
 void EmuSys::stop(void) noexcept
 {
-	paused = false;
-	running = false;
+    paused = false;
+    running = false;
 }
 
 
@@ -157,34 +157,34 @@ void EmuSys::stop(void) noexcept
  */
 void EmuSys::reset(void)
 {
-	if(!loaded)
-	{
-		throw std::runtime_error("Cannot start system without loaded ROM!");
-	}
+    if(!loaded)
+    {
+        throw std::runtime_error("Cannot start system without loaded ROM!");
+    }
 
-	stop();
-	start();
+    stop();
+    start();
 }
 
 
 
 bool EmuSys::isLoaded(void) const noexcept
 {
-	return loaded;
+    return loaded;
 }
 
 
 
 bool EmuSys::isRunning(void) const noexcept
 {
-	return running;
+    return running;
 }
 
 
 
 bool EmuSys::isPaused(void) const noexcept
 {
-	return paused;
+    return paused;
 }
 
 
@@ -194,7 +194,7 @@ bool EmuSys::isPaused(void) const noexcept
  */
 void EmuSys::dumpSystem(void) const
 {
-	logMessage("---BEGIN SYSTEM DUMP---", LOG_DEBUG);
-	mem.dumpMemory();
-	logMessage("---END SYSTEM DUMP---", LOG_DEBUG);
+    logMessage("---BEGIN SYSTEM DUMP---", LOG_DEBUG);
+    mem.dumpMemory();
+    logMessage("---END SYSTEM DUMP---", LOG_DEBUG);
 }

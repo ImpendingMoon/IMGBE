@@ -20,9 +20,9 @@ constexpr int IMGBE_WIN_MIN_HEIGHT = 144;
  * @throws std::runtime_error on SDL failure.
  */
 void windowInit(
-	const std::string& title,
-	int width,
-	int height
+    const std::string& title,
+    int width,
+    int height
 );
 
 /**

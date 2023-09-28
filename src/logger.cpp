@@ -32,39 +32,39 @@ std::ofstream logFile;
  * @throws std::runtime_error If log file cannot be opened.
  */
 void loggerInit(
-	LOG_LEVELS log_level,
-	bool log_to_file,
-	bool log_to_cout
+    LOG_LEVELS log_level,
+    bool log_to_file,
+    bool log_to_cout
 )
 {
-	logLevel = log_level;
-	logToCout = log_to_cout;
-	logToFile = log_to_file;
+    logLevel = log_level;
+    logToCout = log_to_cout;
+    logToFile = log_to_file;
 
-	if(log_to_file)
-	{
-		// SDL handles creating the directory
-		logFilePath = SDL_GetPrefPath("ImpendingMoon", "IMGBE");
-		// Returns NULL if failed, so try using current path.
-		if(logFilePath.empty())
-		{
-			logFilePath = std::filesystem::current_path();
-		}
+    if(log_to_file)
+    {
+        // SDL handles creating the directory
+        logFilePath = SDL_GetPrefPath("ImpendingMoon", "IMGBE");
+        // Returns NULL if failed, so try using current path.
+        if(logFilePath.empty())
+        {
+            logFilePath = std::filesystem::current_path();
+        }
 
-		logFilePath += "imgbe.log";
+        logFilePath += "imgbe.log";
 
-		logFile.open(logFilePath, std::istream::out);
+        logFile.open(logFilePath, std::istream::out);
 
-		if(!logFile.is_open())
-		{
-			throw std::runtime_error(
-				"Cannot open file "
-				+ logFilePath.string()
-			);
-		}
-	}
+        if(!logFile.is_open())
+        {
+            throw std::runtime_error(
+                "Cannot open file "
+                + logFilePath.string()
+            );
+        }
+    }
 
-	isInitialized = true;
+    isInitialized = true;
 }
 
 
@@ -74,8 +74,8 @@ void loggerInit(
  */
 void loggerExit(void) noexcept
 {
-	if(logFile.is_open()) { logFile.close(); }
-	isInitialized = false;
+    if(logFile.is_open()) { logFile.close(); }
+    isInitialized = false;
 }
 
 
@@ -88,58 +88,58 @@ void loggerExit(void) noexcept
  */
 void logMessage(const std::string& msg, LOG_LEVELS level)
 {
-	if(!isInitialized)
-	{
-		throw std::runtime_error("Logger must be initialized!");
-	}
+    if(!isInitialized)
+    {
+        throw std::runtime_error("Logger must be initialized!");
+    }
 
-	if(logLevel == LOG_NOTHING || level == LOG_NOTHING)
-	{
-		return;
-	}
+    if(logLevel == LOG_NOTHING || level == LOG_NOTHING)
+    {
+        return;
+    }
 
-	std::string fmt_message = fmt::format(
-		"[{}] {}\n",
-		getTimestamp(),
-		msg
-		);
+    std::string fmt_message = fmt::format(
+        "[{}] {}\n",
+        getTimestamp(),
+        msg
+        );
 
-	if(logToCout)
-	{
-		if(level == LOG_ERRORS)
-		{
-			std::cerr << fmt_message;
-		} else
-		{
-			std::cout << fmt_message;
-		}
-	}
+    if(logToCout)
+    {
+        if(level == LOG_ERRORS)
+        {
+            std::cerr << fmt_message;
+        } else
+        {
+            std::cout << fmt_message;
+        }
+    }
 
-	if(logToFile && logFile.is_open())
-	{
-		logFile << fmt_message;
-	}
+    if(logToFile && logFile.is_open())
+    {
+        logFile << fmt_message;
+    }
 }
 
 
 
 void setLogLevel(LOG_LEVELS level) noexcept
 {
-	logLevel = level;
+    logLevel = level;
 }
 
 
 
 void setLogToCout(bool value) noexcept
 {
-	logToCout = value;
+    logToCout = value;
 }
 
 
 
 void setLogToFile(bool value) noexcept
 {
-	logToCout = value;
+    logToCout = value;
 }
 
 

@@ -16,136 +16,136 @@
 class EmuMemory
 {
 public:
-	EmuMemory(RegisterSet* cpu_registers = nullptr);
-	~EmuMemory();
+    EmuMemory(RegisterSet* cpu_registers = nullptr);
+    ~EmuMemory();
 
-	/**
-	 * @brief Reads a byte from memory
-	 * @param address
-	 * @param ignore_illegal default=false, Ignore illegal reads (for debug)
-	 * @return Byte at address, 0x00 if address is locked.
-	 * @throws std::out_of_range if illegal address is accessed.
-	 */
-	uint8_t readByte(uint16_t address, bool ignore_illegal = false) const;
+    /**
+     * @brief Reads a byte from memory
+     * @param address
+     * @param ignore_illegal default=false, Ignore illegal reads (for debug)
+     * @return Byte at address, 0x00 if address is locked.
+     * @throws std::out_of_range if illegal address is accessed.
+     */
+    uint8_t readByte(uint16_t address, bool ignore_illegal = false) const;
 
-	/**
-	 * @brief Writes a byte to memory
-	 * @param address
-	 * @param value
-	 * @throws std::out_of_range if illegal address is accessed.
-	 */
-	void writeByte(uint16_t address, uint8_t value);
+    /**
+     * @brief Writes a byte to memory
+     * @param address
+     * @param value
+     * @throws std::out_of_range if illegal address is accessed.
+     */
+    void writeByte(uint16_t address, uint8_t value);
 
-	/**
-	 * @brief Sets the CPU registers pointer
-	 * @param cpu_registers 
-	 */
-	void setCPURegisters(RegisterSet* cpu_registers);
+    /**
+     * @brief Sets the CPU registers pointer
+     * @param cpu_registers 
+     */
+    void setCPURegisters(RegisterSet* cpu_registers);
 
-	/**
-	 * @brief Initializes ROM0 with a set of data.
-	 * @param data MemoryBank with range ROM0_START to ROM0_END.
-	 * @throws std::invalid_argument if memory bank has an incorrect range.
-	 */
-	void initROM0(MemoryBank& data);
+    /**
+     * @brief Initializes ROM0 with a set of data.
+     * @param data MemoryBank with range ROM0_START to ROM0_END.
+     * @throws std::invalid_argument if memory bank has an incorrect range.
+     */
+    void initROM0(MemoryBank& data);
 
-	/**
-	 * @brief Initializes ROM1 with a set of data.
-	 * @param bank_count Number of memory banks avaliable.
-	 * @param initial_bank Initially referenced bank.
-	 * @param data Vector of MemoryBanks with range ROM1_START to ROM1_END.
-	 * @throws std::invalid_argument if data and bank count are mismatched, or
-	 * if any memory bank has an incorrect range.
-	 */
-	void initROM1(
-		size_t bank_count,
-		size_t initial_bank,
-		std::vector<MemoryBank>& data
-	);
+    /**
+     * @brief Initializes ROM1 with a set of data.
+     * @param bank_count Number of memory banks avaliable.
+     * @param initial_bank Initially referenced bank.
+     * @param data Vector of MemoryBanks with range ROM1_START to ROM1_END.
+     * @throws std::invalid_argument if data and bank count are mismatched, or
+     * if any memory bank has an incorrect range.
+     */
+    void initROM1(
+        size_t bank_count,
+        size_t initial_bank,
+        std::vector<MemoryBank>& data
+    );
 
-	/**
-	 * @brief Initializes ERAM with a set of data.
-	 * @param bank_count Number of memory banks avaliable.
-	 * @param initial_bank Initially referenced bank.
-	 * @param battery_backed Whether to save to a file (saved to ROM_NAME.sav).
-	 * @param data Vector of MemoryBanks with range ERAM_START to ERAM_END.
-	 * @throws std::invalid_argument if data and bank count are mismatched, or
-	 * if any memory bank has an incorrect range.
-	 */
-	void initERAM(
-		size_t bank_count,
-		size_t initial_bank,
-		bool battery_backed,
-		std::vector<MemoryBank>& data
-	);
+    /**
+     * @brief Initializes ERAM with a set of data.
+     * @param bank_count Number of memory banks avaliable.
+     * @param initial_bank Initially referenced bank.
+     * @param battery_backed Whether to save to a file (saved to ROM_NAME.sav).
+     * @param data Vector of MemoryBanks with range ERAM_START to ERAM_END.
+     * @throws std::invalid_argument if data and bank count are mismatched, or
+     * if any memory bank has an incorrect range.
+     */
+    void initERAM(
+        size_t bank_count,
+        size_t initial_bank,
+        bool battery_backed,
+        std::vector<MemoryBank>& data
+    );
 
-	/**
-	 * @brief Sets the currently-addressed ROM1 bank
-	 * @param value
-	 * @throws std::out_of_range if >= bank count.
-	 */
-	void setROM1Index(size_t value);
+    /**
+     * @brief Sets the currently-addressed ROM1 bank
+     * @param value
+     * @throws std::out_of_range if >= bank count.
+     */
+    void setROM1Index(size_t value);
 
-	/**
-	 * @brief Sets the currently-addressed WRAM1 bank
-	 * @param value
-	 * @throws std::out_of_range if >= bank count.
-	 */
-	void setWRAM1Index(size_t value);
+    /**
+     * @brief Sets the currently-addressed WRAM1 bank
+     * @param value
+     * @throws std::out_of_range if >= bank count.
+     */
+    void setWRAM1Index(size_t value);
 
-	/**
-	 * @brief Sets the currently-addressed ERAM bank
-	 * @param value
-	 * @throws std::out_of_range if >= bank count.
-	 */
-	void setERAMIndex(size_t value);
+    /**
+     * @brief Sets the currently-addressed ERAM bank
+     * @param value
+     * @throws std::out_of_range if >= bank count.
+     */
+    void setERAMIndex(size_t value);
 
-	/**
-	 * @brief If ERAM has changed and is battery backed, writes ERAM vectors to
-	 * the save file.
-	 */
-	void writeERAM(void);
+    /**
+     * @brief If ERAM has changed and is battery backed, writes ERAM vectors to
+     * the save file.
+     */
+    void writeERAM(void);
 
-	/**
-	 * @brief Returns a .sav file path from an existing file path
-	 * @param rom_file_path 
-	 */
-	static std::filesystem::path getSAVPath(
-		std::filesystem::path rom_file_path
-	) noexcept;
+    /**
+     * @brief Returns a .sav file path from an existing file path
+     * @param rom_file_path 
+     */
+    static std::filesystem::path getSAVPath(
+        std::filesystem::path rom_file_path
+    ) noexcept;
 
-	/**
-	 * @brief Dumps memory contents to the log as LOG_DEBUG.
-	 */
-	void dumpMemory(void) const noexcept;
+    /**
+     * @brief Dumps memory contents to the log as LOG_DEBUG.
+     */
+    void dumpMemory(void) const noexcept;
 
 private:
-	RegisterSet* CPURegisters = nullptr;
+    RegisterSet* CPURegisters = nullptr;
 
-	MemoryBank ROM0;
+    MemoryBank ROM0;
 
-	std::vector<MemoryBank> ROM1;
-	size_t ROM1BankCount = 0;
-	size_t ROM1Index = 0;
+    std::vector<MemoryBank> ROM1;
+    size_t ROM1BankCount = 0;
+    size_t ROM1Index = 0;
 
-	MemoryBank VRAM;
+    MemoryBank VRAM;
 
-	std::vector<MemoryBank> ERAM;
-	size_t ERAMBankCount = 0;
-	size_t ERAMIndex = 0;
-	bool ERAMBatteryBacked = false;
-	bool ERAMDirty = false;
+    std::vector<MemoryBank> ERAM;
+    size_t ERAMBankCount = 0;
+    size_t ERAMIndex = 0;
+    bool ERAMBatteryBacked = false;
+    bool ERAMDirty = false;
 
-	MemoryBank WRAM0;
+    MemoryBank WRAM0;
 
-	std::vector<MemoryBank> WRAM1;
-	size_t WRAM1Index = 0;
-	size_t WRAM1BankCount = 8;
+    std::vector<MemoryBank> WRAM1;
+    size_t WRAM1Index = 0;
+    size_t WRAM1BankCount = 8;
 
-	MemoryBank OAM;
-	MemoryBank IOREG;
-	MemoryBank HRAM;
-	MemoryBank IEREG;
+    MemoryBank OAM;
+    MemoryBank IOREG;
+    MemoryBank HRAM;
+    MemoryBank IEREG;
 };
 
 // Memory Segment Addresses

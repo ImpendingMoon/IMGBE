@@ -25,27 +25,27 @@ RegisterSet::~RegisterSet()
  */
 uint8_t* RegisterSet::getRegisterPtr(uint16_t address) const noexcept
 {
-	auto it = MEMORY_MAP.find(address);
-	if(it != MEMORY_MAP.end())
-	{
-		return it->second;
-	}
+    auto it = MEMORY_MAP.find(address);
+    if(it != MEMORY_MAP.end())
+    {
+        return it->second;
+    }
 
-	return nullptr;
+    return nullptr;
 }
 
 
 
 std::string RegisterSet::cpuToString(void)
 {
-	return fmt::format(
-		"AF: 0x{:04X} BC: 0x{:04X} DE: 0x{:04X} HL: 0x{:04X}\n"
-		"SP: ${:04X} PC: ${:04X}\n"
-		"Zero: {} - Sub: {} - H-Carry: {} - Carry: {}",
-		cpu.af, cpu.bc, cpu.de, cpu.hl,
-		cpu.sp, cpu.pc,
-		flags.zero, flags.sub, flags.half_carry, flags.carry
-	);
+    return fmt::format(
+        "AF: 0x{:04X} BC: 0x{:04X} DE: 0x{:04X} HL: 0x{:04X}\n"
+        "SP: ${:04X} PC: ${:04X}\n"
+        "Zero: {} - Sub: {} - H-Carry: {} - Carry: {}",
+        cpu.af, cpu.bc, cpu.de, cpu.hl,
+        cpu.sp, cpu.pc,
+        flags.zero, flags.sub, flags.half_carry, flags.carry
+    );
 }
 
 
@@ -55,13 +55,13 @@ std::string RegisterSet::cpuToString(void)
  */
 void RegisterSet::flagStructToRegister(void)
 {
-	uint8_t value = 0;
-	value |= (flags.zero << ZERO_POS);
-	value |= (flags.sub << SUB_POS);
-	value |= (flags.half_carry << HALF_CARRY_POS);
-	value |= (flags.carry << CARRY_POS);
+    uint8_t value = 0;
+    value |= (flags.zero << ZERO_POS);
+    value |= (flags.sub << SUB_POS);
+    value |= (flags.half_carry << HALF_CARRY_POS);
+    value |= (flags.carry << CARRY_POS);
 
-	cpu.f = value;
+    cpu.f = value;
 }
 
 
@@ -71,8 +71,8 @@ void RegisterSet::flagStructToRegister(void)
  */
 void RegisterSet::flagRegisterToStruct(void)
 {
-	flags.zero = (cpu.f >> ZERO_POS) & 1;
-	flags.sub = (cpu.f >> SUB_POS) & 1;
-	flags.half_carry = (cpu.f >> HALF_CARRY_POS) & 1;
-	flags.carry = (cpu.f >> CARRY_POS) & 1;
+    flags.zero = (cpu.f >> ZERO_POS) & 1;
+    flags.sub = (cpu.f >> SUB_POS) & 1;
+    flags.half_carry = (cpu.f >> HALF_CARRY_POS) & 1;
+    flags.carry = (cpu.f >> CARRY_POS) & 1;
 }

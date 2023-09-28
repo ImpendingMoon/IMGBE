@@ -21,49 +21,49 @@ SDL_Renderer* renderer = nullptr;
  * @throws std::runtime_error on SDL failure.
  */
 void windowInit(
-	const std::string& title,
-	int width,
-	int height
+    const std::string& title,
+    int width,
+    int height
 )
 {
-	window = SDL_CreateWindow(
-		"IMGBE",
-		SDL_WINDOWPOS_UNDEFINED,
-		SDL_WINDOWPOS_UNDEFINED,
-		(width >= IMGBE_WIN_MIN_WIDTH) ? width : 160,
-		(height >= IMGBE_WIN_MIN_HEIGHT) ? height : 144,
-		0
-		| SDL_WINDOW_SHOWN
-		| SDL_WINDOW_RESIZABLE
-		| SDL_WINDOW_ALLOW_HIGHDPI
-	);
+    window = SDL_CreateWindow(
+        "IMGBE",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        (width >= IMGBE_WIN_MIN_WIDTH) ? width : 160,
+        (height >= IMGBE_WIN_MIN_HEIGHT) ? height : 144,
+        0
+        | SDL_WINDOW_SHOWN
+        | SDL_WINDOW_RESIZABLE
+        | SDL_WINDOW_ALLOW_HIGHDPI
+    );
 
-	if(window == nullptr)
-	{
-		throw std::runtime_error(fmt::format(
-			"Cannot create window! Error: {}", SDL_GetError()
-		));
-	}
+    if(window == nullptr)
+    {
+        throw std::runtime_error(fmt::format(
+            "Cannot create window! Error: {}", SDL_GetError()
+        ));
+    }
 
-	renderer = SDL_CreateRenderer(
-		window,
-		-1,
-		0
-		| SDL_RENDERER_ACCELERATED
-	);
+    renderer = SDL_CreateRenderer(
+        window,
+        -1,
+        0
+        | SDL_RENDERER_ACCELERATED
+    );
 
-	if(renderer == nullptr)
-	{
-		throw std::runtime_error(fmt::format(
-			"Cannot create renderer! Error: {}", SDL_GetError()
-		));
-	}
+    if(renderer == nullptr)
+    {
+        throw std::runtime_error(fmt::format(
+            "Cannot create renderer! Error: {}", SDL_GetError()
+        ));
+    }
 
-	SDL_SetWindowMinimumSize(
-		window,
-		IMGBE_WIN_MIN_WIDTH,
-		IMGBE_WIN_MIN_HEIGHT
-	);
+    SDL_SetWindowMinimumSize(
+        window,
+        IMGBE_WIN_MIN_WIDTH,
+        IMGBE_WIN_MIN_HEIGHT
+    );
 }
 
 
@@ -73,8 +73,8 @@ void windowInit(
  */
 void windowExit(void) noexcept
 {
-	if(window != nullptr) { SDL_DestroyWindow(window); }
-	if(renderer != nullptr) { SDL_DestroyRenderer(renderer); }
+    if(window != nullptr) { SDL_DestroyWindow(window); }
+    if(renderer != nullptr) { SDL_DestroyRenderer(renderer); }
 }
 
 
@@ -84,8 +84,8 @@ void windowExit(void) noexcept
  */
 void windowClear(void) noexcept
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
 }
 
 
@@ -95,5 +95,5 @@ void windowClear(void) noexcept
  */
 void windowUpdate(void) noexcept
 {
-	SDL_RenderPresent(renderer);
+    SDL_RenderPresent(renderer);
 }

@@ -12,10 +12,10 @@
 // Logged messages must be >= log level to be printed.
 enum LOG_LEVELS
 {
-	LOG_NOTHING,
-	LOG_ERRORS,
-	LOG_INFO,
-	LOG_DEBUG,
+    LOG_NOTHING,
+    LOG_ERRORS,
+    LOG_INFO,
+    LOG_DEBUG,
 };
 
 /**
@@ -26,9 +26,9 @@ enum LOG_LEVELS
  * @throws std::runtime_error If log file cannot be opened.
  */
 void loggerInit(
-	LOG_LEVELS log_level = LOG_ERRORS,
-	bool log_to_file = true,
-	bool log_to_cout = true
+    LOG_LEVELS log_level = LOG_ERRORS,
+    bool log_to_file = true,
+    bool log_to_cout = true
 );
 
 /**
