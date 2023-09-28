@@ -17,8 +17,11 @@
 void throwInvalidArgument(const std::string& argument);
 
 bool isMainInitialized = false;
-
+#ifdef SDL_main
 int SDL_main(int argc, char** argv)
+#else
+int main(int argc, char** argv)
+#endif
 {
     try
     {
