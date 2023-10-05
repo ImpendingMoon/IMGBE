@@ -1,5 +1,5 @@
 /**
- * @file emu/emucpu.cpp
+ * @file emu/emuregisters.cpp
  * @brief Implements the system's registers
  * @author ImpendingMoon
  * @date 2023-07-23
