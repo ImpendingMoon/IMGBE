@@ -2,7 +2,7 @@
  * @file emu/emumemory.cpp
  * @brief Implements the system's memory
  * @author ImpendingMoon
- * @date 2023-08-21
+ * @date 2023-10-05
  */
 
 #include "emumemory.hpp"
@@ -32,8 +32,7 @@ EmuMemory::EmuMemory(RegisterSet* cpu_registers) :
 }
 
 EmuMemory::~EmuMemory()
-{
-}
+{}
 
 
 
@@ -42,7 +41,6 @@ EmuMemory::~EmuMemory()
  * @param address
  * @param ignore_illegal default=false, Ignore illegal reads (for debug)
  * @return Byte at address, 0x00 if address is locked.
- * @throws std::out_of_range if illegal address is accessed.
  */
 uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
 {
@@ -70,11 +68,14 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
         {
             if(ignore_illegal) { return 0; }
 
-            throw std::out_of_range(fmt::format(
+            logMessage(fmt::format(
                 "Illegal ROM1 Bank Read! Current Bank: {} - Max Bank: {}",
                 ROM1Index, ROM1BankCount - 1
-            ));
+            ), LOG_DEBUG);
+
+            return 0xFF;
         }
+
         return ROM1.at(ROM1Index).readByte(address);
     }
 
@@ -89,11 +90,14 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
         {
             if(ignore_illegal) { return 0; }
 
-            throw std::out_of_range(fmt::format(
+            logMessage(fmt::format(
                 "Illegal ERAM Bank Read! Current Bank: {} - Max Bank: {}",
                 ERAMIndex, ERAMBankCount - 1
-            ));
+            ), LOG_DEBUG);
+
+            return 0xFF;
         }
+
         return ERAM.at(ERAMIndex).readByte(address);
     }
 
@@ -108,11 +112,14 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
         {
             if(ignore_illegal) { return 0; }
 
-            throw std::out_of_range(fmt::format(
+            logMessage(fmt::format(
                 "Illegal WRAM1 Bank Read! Current Bank: {} - Max Bank: {}",
                 WRAM1Index, WRAM1BankCount - 1
-            ));
+            ), LOG_DEBUG);
+
+            return 0xFF;
         }
+
         return WRAM1.at(WRAM1Index).readByte(address);
     }
 
@@ -143,9 +150,16 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
 
     if(ignore_illegal) { return 0; }
 
-    throw std::out_of_range(fmt::format(
+    logMessage(fmt::format(
         "Illegal Memory Read! Address: ${:04X}", address
-    ));
+    ), LOG_DEBUG);
+
+    return 0xFF;
+
+    // Need to handle bugs in games. Real hardware reads 0xFF or open bus.
+    //throw std::out_of_range(fmt::format(
+    //    "Illegal Memory Read! Address: ${:04X}", address
+    //));
 }
 
 
@@ -154,7 +168,6 @@ uint8_t EmuMemory::readByte(uint16_t address, bool ignore_illegal) const
  * @brief Writes a byte to memory
  * @param address
  * @param value
- * @throws std::out_of_range if illegal address is accessed.
  */
 void EmuMemory::writeByte(uint16_t address, uint8_t value)
 {
@@ -173,12 +186,9 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
     {
         // TODO: Bank switching
         logMessage(fmt::format(
-            "Attempted write to ROM! Address: ${:04X}"
-            "- Value 0x{:02X}",
+            "Attempted write to ROM! Address: ${:04X} - Value 0x{:02X}",
             address, value
-        ), 
-            LOG_DEBUG
-        );
+        ), LOG_DEBUG);
 
         return;
     }
@@ -193,11 +203,14 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
     {
         if(ERAMIndex >= ERAMBankCount || ERAMBankCount == 0)
         {
-            throw std::out_of_range(fmt::format(
+            logMessage(fmt::format(
                 "Illegal ERAM Bank Write! Current Bank: {} - Max Bank: {}",
                 ERAMIndex, ERAMBankCount - 1
-            ));
+            ), LOG_DEBUG);
+
+            return;
         }
+
         ERAM.at(ERAMIndex).writeByte(address, value);
         ERAMDirty = true;
         return;
@@ -213,11 +226,14 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
     {
         if(WRAM1Index >= WRAM1BankCount || WRAM1BankCount == 0)
         {
-            throw std::out_of_range(fmt::format(
-                "Illegal WRAM1 Bank Write! Current Bank: {} - Max Bank: {}",
-                WRAM1Index, WRAM1BankCount - 1
-            ));
+            logMessage(fmt::format(
+                "Illegal ERAM Bank Write! Current Bank: {} - Max Bank: {}",
+                ERAMIndex, ERAMBankCount - 1
+            ), LOG_DEBUG);
+
+            return;
         }
+
         WRAM1.at(WRAM1Index).writeByte(address, value);
         return;
     }
@@ -252,9 +268,9 @@ void EmuMemory::writeByte(uint16_t address, uint8_t value)
         return;
     }
 
-    throw std::out_of_range(fmt::format(
+    logMessage(fmt::format(
         "Illegal Memory Write! Address: ${:04X} - Value: 0x{:02X}", address, value
-    ));
+    ), LOG_DEBUG);
 }
 
 
