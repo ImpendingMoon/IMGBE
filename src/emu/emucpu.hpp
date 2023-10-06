@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-08-21
+ * @date 2023-10-05
  */
 
 #pragma once
@@ -32,7 +32,6 @@ public:
 
     /**
      * @brief Initializes registers to after-BIOS defaults
-     * @param void Soon to be model, currently only DMG
      */
     void initRegs(void);
 

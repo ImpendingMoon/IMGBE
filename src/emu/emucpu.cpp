@@ -2,7 +2,7 @@
  * @file emu/emucpu.cpp
  * @brief Implements the system's CPU
  * @author ImpendingMoon
- * @date 2023-08-21
+ * @date 2023-10-05
  */
 
 #include "emucpu.hpp"
@@ -3449,22 +3449,10 @@ int EmuCPU::step(bool log_instruction)
 
 /**
  * @brief Initializes registers to after-BIOS defaults
- * @param void Soon to be model, currently only DMG
  */
 void EmuCPU::initRegs(void)
 {
-    // TODO: Make this a data structure, and have separate ones for each model.
-    // TODO: Memory registers.
-    regs.cpu.a = 0x01;
-    regs.cpu.f = 0b10000000;
-    regs.cpu.b = 0x00;
-    regs.cpu.c = 0x13;
-    regs.cpu.d = 0x00;
-    regs.cpu.e = 0xD8;
-    regs.cpu.h = 0x01;
-    regs.cpu.l = 0x4D;
-    regs.cpu.pc = 0x0100;
-    regs.cpu.sp = 0xFFFE;
+    // TEMP: Handled by RegisterSet. Will be put into data structure.
 }
 
 
