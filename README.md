@@ -1,5 +1,6 @@
-# IMGBE
+# IMGBE-Legacy
  I Made a GameBoy Emulator (IMGBE) is a simple emulator written in C++.
+ Abandoned, because I made many poor decisions in early designs.
 
 ## Dependencies
 - SDL2 2.28 or higher
